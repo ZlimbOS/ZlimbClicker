@@ -6,65 +6,19 @@
     <title>Zlimb OS | Elite Edition</title>
     <style>
         @import url('https://googleapis.com');
-        
-        :root { 
-            --accent: #7B61FF; 
-            --accent-glow: rgba(123, 97, 255, 0.4);
-            --bg: #020204; 
-            --glass: rgba(255, 255, 255, 0.03);
-            --border: rgba(255, 255, 255, 0.08);
-            --danger: #FF4B4B;
-        }
-
+        :root { --accent: #7B61FF; --bg: #020204; --glass: rgba(255, 255, 255, 0.03); --border: rgba(255, 255, 255, 0.08); --danger: #FF4B4B; }
         body { margin: 0; background: var(--bg); color: white; font-family: 'Plus Jakarta Sans', sans-serif; overflow: hidden; height: 100vh; display: flex; justify-content: center; align-items: center; }
-        
-        .mesh-bg { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: radial-gradient(at 10% 10%, rgba(123, 97, 255, 0.15) 0px, transparent 45%), radial-gradient(at 90% 90%, rgba(0, 209, 255, 0.1) 0px, transparent 45%);
-            z-index: -2; filter: blur(60px); 
-        }
-        
-        #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; opacity: 0.8; }
-
-        #session-timer { 
-            position: fixed; top: 30px; left: 30px; z-index: 999; 
-            background: var(--glass); border: 1px solid var(--border); 
-            padding: 12px 22px; border-radius: 20px; backdrop-filter: blur(25px); 
-            font-family: monospace; font-size: 1.1rem; color: var(--accent); display: none;
-        }
-
-        #profile-trigger { 
-            position: fixed; top: 30px; right: 30px; z-index: 999; 
-            background: var(--glass); backdrop-filter: blur(25px); 
-            border: 1px solid var(--border); border-radius: 22px; 
-            padding: 10px 24px; cursor: pointer; display: flex; align-items: center; gap: 14px; 
-        }
-
-        .glass-card { 
-            background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(50px) saturate(200%); 
-            border: 1px solid var(--border); border-radius: 44px; 
-            padding: 50px; text-align: center; width: 420px; z-index: 100; 
-        }
-
-        h1 { font-size: 2.5rem; font-weight: 800; margin: 0 0 30px; background: linear-gradient(135deg, #fff 30%, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        
-        .input-group { position: relative; margin-bottom: 12px; display: flex; gap: 8px; }
-        input { width: 100%; padding: 18px; background: rgba(0, 0, 0, 0.4); border: 1px solid var(--border); border-radius: 16px; color: white; outline: none; font-size: 1rem; transition: 0.3s; }
-        input:focus { border-color: var(--accent); box-shadow: 0 0 20px var(--accent-glow); }
-
-        .btn { width: 100%; background: var(--accent); color: white; border: none; padding: 18px; border-radius: 16px; font-weight: 700; cursor: pointer; transition: 0.3s; display: block; margin-top: 10px; text-decoration: none; font-size: 1rem; text-align: center; }
-        .btn:hover { transform: translateY(-3px); box-shadow: 0 15px 30px var(--accent-glow); }
-        
-        /* Кнопка РЕГИСТРАЦИЯ рядом с вводом */
-        .reg-link-btn { background: var(--glass); border: 1px solid var(--border); color: #888; padding: 0 15px; border-radius: 14px; font-size: 0.65rem; font-weight: 800; cursor: pointer; white-space: nowrap; transition: 0.3s; }
-        .reg-link-btn:hover { color: white; border-color: var(--accent); }
-
-        #side-menu { 
-            position: fixed; top: 0; right: 0; height: 100vh; width: 400px; 
-            background: rgba(4, 5, 8, 0.96); backdrop-filter: blur(80px); 
-            border-left: 1px solid var(--border); z-index: 1000; 
-            padding: 60px 45px; transition: 0.6s cubic-bezier(0.19, 1, 0.22, 1); transform: translateX(100%); 
-        }
+        .mesh-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(at 10% 10%, rgba(123, 97, 255, 0.15) 0px, transparent 45%), radial-gradient(at 90% 90%, rgba(0, 209, 255, 0.1) 0px, transparent 45%); z-index: -2; filter: blur(60px); }
+        #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; }
+        #session-timer { position: fixed; top: 30px; left: 30px; z-index: 999; background: var(--glass); border: 1px solid var(--border); padding: 12px 22px; border-radius: 20px; backdrop-filter: blur(25px); font-family: monospace; display: none; }
+        #profile-trigger { position: fixed; top: 30px; right: 30px; z-index: 999; background: var(--glass); border: 1px solid var(--border); border-radius: 22px; padding: 10px 24px; cursor: pointer; display: flex; align-items: center; gap: 14px; }
+        .glass-card { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(50px); border: 1px solid var(--border); border-radius: 44px; padding: 50px; text-align: center; width: 420px; z-index: 100; }
+        h1 { font-size: 2.5rem; font-weight: 800; margin: 0 0 30px; background: linear-gradient(135deg, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .input-group { display: flex; gap: 8px; margin-bottom: 12px; }
+        input { width: 100%; padding: 18px; background: rgba(0, 0, 0, 0.4); border: 1px solid var(--border); border-radius: 16px; color: white; outline: none; }
+        .btn { width: 100%; background: var(--accent); color: white; border: none; padding: 18px; border-radius: 16px; font-weight: 700; cursor: pointer; transition: 0.3s; display: block; margin-top: 10px; text-decoration: none; }
+        .reg-link-btn { background: var(--glass); border: 1px solid var(--border); color: #888; padding: 0 15px; border-radius: 14px; font-size: 0.65rem; cursor: pointer; }
+        #side-menu { position: fixed; top: 0; right: 0; height: 100vh; width: 400px; background: rgba(4, 5, 8, 0.98); border-left: 1px solid var(--border); z-index: 1000; padding: 60px 45px; transition: 0.6s; transform: translateX(100%); }
         #side-menu.active { transform: translateX(0); }
         .admin-item { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); padding: 12px; border-radius: 12px; margin-bottom: 8px; border: 1px solid var(--border); }
         .hidden { display: none !important; }
@@ -75,13 +29,11 @@
     <canvas id="bg-canvas"></canvas>
     <div id="session-timer">ОСТАЛОСЬ: <span id="time-val">24:00:00</span></div>
 
-    <!-- КНОПКА ПРОФИЛЯ -->
     <div id="profile-trigger" class="hidden" onclick="toggleMenu()">
         <span id="nav-user">User</span>
-        <div style="width:10px; height:10px; background: #2ECC71; border-radius:50%; box-shadow: 0 0 10px #2ECC71;"></div>
+        <div style="width:10px; height:10px; background: #2ECC71; border-radius:50%;"></div>
     </div>
 
-    <!-- ЭКРАН ВХОДА -->
     <div class="glass-card" id="screen-auth">
         <h1>Zlimb OS</h1>
         <div class="input-group">
@@ -92,33 +44,28 @@
         <button class="btn" onclick="handleAuth()">ВОЙТИ</button>
     </div>
 
-    <!-- ЭКРАН РЕГИСТРАЦИИ -->
     <div class="glass-card hidden" id="screen-reg">
         <h1>Регистрация</h1>
-        <p style="color: #666; font-size: 0.8rem; margin-bottom: 20px;">Создайте аккаунт и получите доступ на 24ч</p>
         <input type="text" id="reg-user" placeholder="Логин">
         <input type="password" id="reg-pass" placeholder="Пароль">
-        <button class="btn" onclick="handleReg()">СОЗДАТЬ И ВОЙТИ</button>
-        <button class="btn" style="background: transparent; border: 1px solid var(--border); color: #555;" onclick="switchForm('auth')">НАЗАД</button>
+        <button class="btn" onclick="handleReg()">СОЗДАТЬ</button>
+        <button class="btn" style="background:transparent; border:1px solid var(--border);" onclick="switchForm('auth')">НАЗАД</button>
     </div>
 
-    <!-- ЛАУНЧЕР -->
     <div class="glass-card hidden" id="screen-launcher">
         <h1>Zlimb Ultra</h1>
-        <p style="color: rgba(255,255,255,0.4); margin-bottom: 40px;">Авторизация успешна.<br>ZlimbClicker.exe скачивается...</p>
-        <a href="https://dropbox.com" 
-           id="auto-dl" target="_blank" class="btn">СКАЧАТЬ ВРУЧНУЮ</a>
+        <p>Загрузка началась автоматически...</p>
+        <a href="https://dropbox.com" id="auto-dl" target="_blank" class="btn">СКАЧАТЬ ВРУЧНУЮ</a>
     </div>
 
-    <!-- АДМИНКА -->
     <div id="side-menu">
         <h2 id="menu-name">Username</h2>
+        <!-- ВОТ ЭТОТ БЛОК ПОЯВИТСЯ ТОЛЬКО У ТЕБЯ -->
         <div id="admin-section" class="hidden">
-            <p style="color: var(--accent); font-weight: 800; margin-top: 40px; border-top: 1px solid var(--border); padding-top: 20px;">УПРАВЛЕНИЕ ПОЛЬЗОВАТЕЛЯМИ</p>
-            <div id="admin-list-box" style="margin-top: 20px;"></div>
+            <p style="color: var(--accent); font-weight: 800; margin-top: 40px;">АДМИН-ПАНЕЛЬ</p>
+            <div id="admin-list-box"></div>
         </div>
         <button class="btn" style="background:rgba(255,0,0,0.1); color:var(--danger); margin-top:60px;" onclick="logout()">ВЫЙТИ</button>
-        <button class="btn" style="background: var(--glass); margin-top: 15px;" onclick="toggleMenu()">ЗАКРЫТЬ</button>
     </div>
 
     <script>
@@ -132,44 +79,36 @@
         }
 
         function handleReg() {
-            const u = document.getElementById('reg-user').value.trim();
+            const u = document.getElementById('reg-user').value.trim().toLowerCase();
             const p = document.getElementById('reg-pass').value.trim();
-            if(u.length < 3 || p.length < 4) return alert('Минимум 3 символа для ника и 4 для пароля!');
-            
-            let db = JSON.parse(localStorage.getItem('z_users_db') || '{}');
-            if(db[u.toLowerCase()] || u.toLowerCase() === OWNER) return alert('Этот ник уже занят!');
-
-            db[u.toLowerCase()] = { pass: p };
-            localStorage.setItem('z_users_db', JSON.stringify(db));
-            alert('Аккаунт создан! Теперь введите данные для входа.');
+            if(!u || !p) return;
+            let db = JSON.parse(localStorage.getItem('z_db') || '{}');
+            if(db[u] || u === OWNER) return alert('Занято');
+            db[u] = { pass: p };
+            localStorage.setItem('z_db', JSON.stringify(db));
+            alert('Готово! Войдите.');
             switchForm('auth');
         }
 
         function handleAuth() {
             const u = document.getElementById('login-user').value.trim().toLowerCase();
             const p = document.getElementById('login-pass').value.trim();
-            const db = JSON.parse(localStorage.getItem('z_users_db') || '{}');
+            const db = JSON.parse(localStorage.getItem('z_db') || '{}');
 
-            if (u === OWNER && p === OWNER_P) {
-                login(u, 'OWNER');
-            } else if (db[u] && db[u].pass === p) {
-                login(u, 'USER');
-            } else {
-                alert('Неверный логин или пароль!');
-            }
+            if (u === OWNER && p === OWNER_P) { login(u); }
+            else if (db[u] && db[u].pass === p) { login(u); }
+            else { alert('Ошибка'); }
         }
 
-        function login(u, role) {
-            localStorage.setItem('z_current_user', u);
-            if (!localStorage.getItem('z_timer_' + u)) {
-                localStorage.setItem('z_timer_' + u, Date.now() + (24 * 60 * 60 * 1000));
-            }
+        function login(u) {
+            localStorage.setItem('z_cur', u);
+            if (!localStorage.getItem('z_t_' + u)) localStorage.setItem('z_t_' + u, Date.now() + 86400000);
             location.reload();
         }
 
         window.onload = () => {
             initSnow(); drawSnow();
-            const u = localStorage.getItem('z_current_user');
+            const u = localStorage.getItem('z_cur');
             if (u) {
                 document.getElementById('screen-auth').classList.add('hidden');
                 document.getElementById('screen-launcher').classList.remove('hidden');
@@ -178,57 +117,44 @@
                 document.getElementById('menu-name').innerText = u;
                 if (u === OWNER) {
                     document.getElementById('admin-section').classList.remove('hidden');
-                    renderAdminList();
+                    renderAdmin();
                 }
                 startTimer(u);
                 setTimeout(() => document.getElementById('auto-dl').click(), 1500);
             }
         };
 
-        function renderAdminList() {
+        function renderAdmin() {
             const box = document.getElementById('admin-list-box');
-            const db = JSON.parse(localStorage.getItem('z_users_db') || '{}');
-            box.innerHTML = Object.keys(db).map(n => `
-                <div class="admin-item">
-                    <span>${n}</span>
-                    <button style="color:red; background:none; border:none; cursor:pointer;" onclick="deleteUser('${n}')">УДАЛИТЬ</button>
-                </div>
-            `).join('');
+            const db = JSON.parse(localStorage.getItem('z_db') || '{}');
+            box.innerHTML = Object.keys(db).map(n => `<div class="admin-item"><span>${n}</span><button onclick="del('${n}')" style="color:red; background:none; border:none; cursor:pointer;">Удалить</button></div>`).join('');
         }
 
-        function deleteUser(n) {
-            let db = JSON.parse(localStorage.getItem('z_users_db') || '{}');
+        function del(n) {
+            let db = JSON.parse(localStorage.getItem('z_db') || '{}');
             delete db[n];
-            localStorage.setItem('z_users_db', JSON.stringify(db));
-            renderAdminList();
+            localStorage.setItem('z_db', JSON.stringify(db));
+            renderAdmin();
         }
 
-        // --- СНЕГ И ТАЙМЕР ---
-        const canvas = document.getElementById('bg-canvas');
-        const ctx = canvas.getContext('2d');
-        let snow = [];
-        function initSnow() {
-            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-            snow = Array.from({length: 100}, () => ({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: Math.random()*3+1, s: Math.random()*1+0.5 }));
-        }
-        function drawSnow() {
-            ctx.clearRect(0,0,canvas.width, canvas.height);
-            ctx.fillStyle = "rgba(255,255,255,0.6)";
-            snow.forEach(p => { ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill(); p.y += p.s; if(p.y > canvas.height) p.y = -10; });
-            requestAnimationFrame(drawSnow);
-        }
+        // Таймер, Снег и Выход
         function startTimer(u) {
             document.getElementById('session-timer').style.display = 'block';
             setInterval(() => {
-                const diff = parseInt(localStorage.getItem('z_timer_' + u)) - Date.now();
-                if (diff <= 0) logout();
+                const diff = parseInt(localStorage.getItem('z_t_' + u)) - Date.now();
+                if(diff <= 0) logout();
                 const h = Math.floor(diff/3600000).toString().padStart(2,'0'), m = Math.floor((diff%3600000)/60000).toString().padStart(2,'0'), s = Math.floor((diff%60000)/1000).toString().padStart(2,'0');
                 document.getElementById('time-val').innerText = `${h}:${m}:${s}`;
             }, 1000);
         }
         function toggleMenu() { document.getElementById('side-menu').classList.toggle('active'); }
-        function logout() { localStorage.removeItem('z_current_user'); location.reload(); }
-        window.onresize = initSnow;
+        function logout() { localStorage.removeItem('z_cur'); location.reload(); }
+        
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let snow = [];
+        function initSnow() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; snow = Array.from({length: 80}, () => ({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: Math.random()*3+1, s: Math.random()*1+0.5 })); }
+        function drawSnow() { ctx.clearRect(0,0,canvas.width, canvas.height); ctx.fillStyle = "white"; snow.forEach(p => { ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill(); p.y += p.s; if(p.y > canvas.height) p.y = -10; }); requestAnimationFrame(drawSnow); }
     </script>
 </body>
 </html>
