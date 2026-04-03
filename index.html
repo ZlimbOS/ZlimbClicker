@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zlimb OS | Next Gen Launcher</title>
+    <title>Zlimb OS | Официальный Лаунчер</title>
     <style>
         @import url('https://googleapis.com');
         
@@ -22,7 +22,6 @@
             display: flex; justify-content: center; align-items: center; 
         }
 
-        /* Анимированный живой фон */
         .mesh-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: 
@@ -34,7 +33,6 @@
 
         #particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
 
-        /* Стеклянные карточки */
         .glass-card { 
             background: var(--glass); 
             backdrop-filter: blur(40px) saturate(150%); 
@@ -77,7 +75,6 @@
         }
         .btn-main:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(123, 97, 255, 0.5); filter: brightness(1.1); }
 
-        /* Кнопка профиля в углу */
         #profile-hub {
             position: fixed; top: 35px; right: 35px; z-index: 100;
             background: var(--glass); backdrop-filter: blur(20px);
@@ -87,10 +84,9 @@
         }
         #profile-hub:hover { border-color: var(--accent); transform: scale(1.05); }
 
-        /* Боковое меню */
         #side-panel {
             position: fixed; top: 0; right: 0; height: 100vh; width: 380px;
-            background: rgba(5, 6, 10, 0.85); backdrop-filter: blur(50px);
+            background: rgba(5, 6, 10, 0.9); backdrop-filter: blur(50px);
             border-left: 1px solid var(--border); z-index: 150;
             padding: 50px 40px; transition: 0.6s cubic-bezier(0.19, 1, 0.22, 1);
             transform: translateX(100%);
@@ -105,40 +101,42 @@
     <div class="mesh-bg"></div>
     <div id="particles"></div>
 
-    <!-- HUB ПРОФИЛЯ -->
+    <!-- КНОПКА ПРОФИЛЯ -->
     <div id="profile-hub" class="hidden" onclick="toggleSidebar()">
         <div style="width: 8px; height: 8px; background: #2ECC71; border-radius: 50%; box-shadow: 0 0 10px #2ECC71;"></div>
-        <span id="nav-name" style="font-weight: 600; font-size: 0.9rem;">User</span>
+        <span id="nav-name" style="font-weight: 600; font-size: 0.9rem;">Пользователь</span>
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
     </div>
 
     <!-- ОКНО ВХОДА -->
     <div class="glass-card" id="auth-screen">
         <h1>Zlimb OS</h1>
-        <input type="text" id="login-user" placeholder="Логин">
-        <div id="pass-field" class="hidden"><input type="password" id="login-pass" placeholder="Пароль администратора"></div>
+        <input type="text" id="login-user" placeholder="Никнейм">
+        <div id="pass-field" class="hidden"><input type="password" id="login-pass" placeholder="Пароль владельца"></div>
         <div id="setup-pass-field" class="hidden">
-            <p style="font-size: 0.8rem; color: var(--accent-2); margin-bottom: 10px;">Вам выдан доступ. Создайте пароль:</p>
+            <p style="font-size: 0.8rem; color: var(--accent-2); margin-bottom: 10px;">Доступ разрешен. Создайте личный пароль:</p>
             <input type="password" id="setup-new-pass" placeholder="Придумайте пароль">
         </div>
-        <button class="btn-main" onclick="handleAuth()">Авторизация</button>
+        <button class="btn-main" onclick="handleAuth()">Войти в систему</button>
     </div>
 
     <!-- ОКНО ЛАУНЧЕРА -->
     <div class="glass-card hidden" id="launcher-screen">
-        <h1 style="font-size: 2rem;">Zlimb Ultra</h1>
-        <p style="color: rgba(255,255,255,0.4); margin-bottom: 45px; line-height: 1.6;">Пакет Zlimb Launcher v1.0.6 готов. Используйте кнопку ниже для загрузки с облака.</p>
-        <!-- ТВОЯ ССЫЛКА ТУТ -->
-        <a href="https://disk.yandex.ru/d/xUvvDNlmnfo6Kw" target="_blank" class="btn-main">СКАЧАТЬ ЛАУНЧЕР</a>
+        <h1 style="font-size: 2.2rem;">Zlimb Ultra</h1>
+        <p style="color: rgba(255,255,255,0.4); margin-bottom: 40px; line-height: 1.6;">Пакет обновлений 1.0.6 готов. Используйте кнопку ниже для мгновенной загрузки.</p>
+        
+        <!-- ССЫЛКА НА ГИТХАБ (ДЛЯ ПРЯМОЙ СКАЧКИ) ИЛИ ЯНДЕКС -->
+        <a href="ZlimbClicker.exe" download id="dl-link" class="btn-main">СКАЧАТЬ ЛАУНЧЕР</a>
+        <p style="font-size: 0.7rem; color: #555; margin-top: 15px;">*Если загрузка не началась, проверьте блокировщик рекламы</p>
     </div>
 
     <!-- БОКОВАЯ ПАНЕЛЬ -->
     <div id="side-panel">
-        <h2 id="menu-user" style="margin: 0; font-size: 1.8rem; font-weight: 800;">User</h2>
-        <p id="menu-role" style="font-size: 0.7rem; color: var(--accent); text-transform: uppercase; letter-spacing: 3px; margin-top: 5px;">ACCOUNT STATUS</p>
+        <h2 id="menu-user" style="margin: 0; font-size: 1.8rem; font-weight: 800;">Никнейм</h2>
+        <p id="menu-role" style="font-size: 0.7rem; color: var(--accent); text-transform: uppercase; letter-spacing: 3px; margin-top: 5px;">Статус: Пользователь</p>
         
         <div id="admin-hub" class="hidden" style="margin-top: 50px; border-top: 1px solid var(--border); padding-top: 30px;">
-            <p style="color: #FF4B4B; font-weight: 800; font-size: 0.8rem; margin-bottom: 20px;">ADMIN TOOLS</p>
+            <p style="color: #FF4B4B; font-weight: 800; font-size: 0.8rem; margin-bottom: 20px;">ПАНЕЛЬ УПРАВЛЕНИЯ</p>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                 <button class="btn-main" style="padding: 12px; font-size: 0.8rem; background: var(--glass);" onclick="setTheme('snow')">Снег</button>
                 <button class="btn-main" style="padding: 12px; font-size: 0.8rem; background: var(--glass);" onclick="setTheme('matrix')">Матрица</button>
@@ -146,13 +144,13 @@
 
             <!-- ВЫДАЧА АДМИНКИ -->
             <div id="owner-only" class="hidden" style="margin-top: 35px;">
-                <p style="font-size: 0.7rem; color: #555; margin-bottom: 10px;">ВЫДАТЬ АДМИНКУ (НИК)</p>
-                <input type="text" id="target-nick" placeholder="Username" style="font-size: 0.8rem; padding: 15px;">
-                <button class="btn-main" style="background: #FF4B4B;" onclick="grantAdmin()">Выдать права</button>
+                <p style="font-size: 0.7rem; color: #555; margin-bottom: 10px;">ВЫДАТЬ АДМИНКУ ПО НИКУ</p>
+                <input type="text" id="target-nick" placeholder="Username пользователя" style="font-size: 0.8rem; padding: 15px;">
+                <button class="btn-main" style="background: #FF4B4B;" onclick="grantAdmin()">Предоставить права</button>
             </div>
         </div>
 
-        <button class="btn-main" style="background: transparent; border: 1px solid #FF4B4B; color: #FF4B4B; margin-top: 60px;" onclick="logout()">Завершить сеанс</button>
+        <button class="btn-main" style="background: transparent; border: 1px solid #FF4B4B; color: #FF4B4B; margin-top: 60px;" onclick="logout()">Выйти из аккаунта</button>
         <button class="btn-main" style="background: var(--glass); margin-top: 15px;" onclick="toggleSidebar()">Закрыть меню</button>
     </div>
 
@@ -166,7 +164,7 @@
             theme: localStorage.getItem('z_theme') || 'snow'
         };
 
-        // Живой поиск ника
+        // Живая проверка ника
         document.getElementById('login-user').addEventListener('input', (e) => {
             const nick = e.target.value.trim();
             const whitelist = JSON.parse(localStorage.getItem('z_whitelist') || '[]');
@@ -192,10 +190,10 @@
                 const savedP = localStorage.getItem('z_pass_' + nick);
                 if(!savedP) {
                     if(setupP.length > 3) { localStorage.setItem('z_pass_' + nick, setupP); save(nick, true); }
-                    else alert("Пароль от 4 символов");
+                    else alert("Пароль должен быть от 4 символов");
                 } else {
                     if(passIn === savedP) save(nick, true);
-                    else alert("Неверный пароль");
+                    else alert("Неверный личный пароль");
                 }
             } else if(nick.length > 1) save(nick, false);
         }
@@ -213,7 +211,7 @@
             if(!list.includes(n)) {
                 list.push(n);
                 localStorage.setItem('z_whitelist', JSON.stringify(list));
-                alert("Админка для " + n + " выдана!");
+                alert("Админка для " + n + " успешно активирована");
             }
         }
 
@@ -227,10 +225,15 @@
 
             if(state.isAdmin || state.user.toLowerCase() === OWNER) {
                 document.getElementById('admin-hub').classList.remove('hidden');
-                document.getElementById('menu-role').innerText = "Administrator Access";
+                document.getElementById('menu-role').innerText = "Статус: Администратор";
                 document.getElementById('menu-role').style.color = "#FF4B4B";
             }
             if(state.user.toLowerCase() === OWNER) document.getElementById('owner-only').classList.remove('hidden');
+            
+            // Если файла на гитхабе нет, меняем ссылку обратно на яндекс
+            document.getElementById('dl-link').onerror = function() {
+                this.href = "https://yandex.ru";
+            };
         }
 
         function toggleSidebar() { document.getElementById('side-panel').classList.toggle('open'); }
