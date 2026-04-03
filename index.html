@@ -18,9 +18,9 @@
         h1 { font-size: 2.6rem; font-weight: 800; margin: 0 0 30px; text-shadow: 0 0 20px var(--accent); }
         
         input { width: 100%; padding: 18px; background: #0a0a0a; border: 1px solid var(--border); border-radius: 16px; color: white; outline: none; margin-bottom: 12px; box-sizing: border-box; }
-        .btn { width: 100%; background: var(--accent); color: white; border: none; padding: 18px; border-radius: 16px; font-weight: 700; cursor: pointer; display: block; text-decoration: none; text-align: center; }
+        .btn { width: 100%; background: var(--accent); color: white; border: none; padding: 18px; border-radius: 16px; font-weight: 700; cursor: pointer; display: block; text-decoration: none; text-align: center; transition: 0.3s; }
 
-        /* АДМИН ПАНЕЛЬ */
+        /* МЕНЮ */
         #side-menu { position: fixed; top: 0; right: 0; height: 100vh; width: 420px; background: #050505; border-left: 1px solid var(--border); z-index: 1000; padding: 60px 40px; transition: 0.5s; transform: translateX(100%); overflow-y: auto; box-sizing: border-box; }
         #side-menu.active { transform: translateX(0); }
         
@@ -34,47 +34,44 @@
     <canvas id="bg-canvas"></canvas>
     <div id="session-timer">ОСТАЛОСЬ: <span id="time-val">24:00:00</span></div>
 
-    <!-- КНОПКА ПРОФИЛЯ -->
     <div id="profile-trigger" class="hidden" onclick="toggleMenu()">
-        <span id="nav-user">zl1mbyys</span>
+        <span id="nav-user">User</span>
         <div style="width:10px; height:10px; background: #2ECC71; border-radius:50%; box-shadow: 0 0 10px #2ECC71;"></div>
     </div>
 
-    <!-- ВХОД -->
+    <!-- ЭКРАНЫ -->
     <div class="glass-card" id="screen-auth">
         <h1>Zlimb OS</h1>
         <input type="text" id="login-user" placeholder="Логин">
         <input type="password" id="login-pass" placeholder="Пароль">
         <button class="btn" onclick="handleAuth()">ВОЙТИ</button>
-        <p style="font-size: 0.7rem; color: #333; margin-top: 20px; cursor: pointer;" onclick="alert('Регистрация доступна в админ-панели владельца')">НЕТ АККАУНТА?</p>
     </div>
 
-    <!-- ЛАУНЧЕР -->
     <div class="glass-card hidden" id="screen-launcher">
-        <h1>Elite Ready</h1>
-        <p style="color: #444; margin-bottom: 40px;">Авто-загрузка инициирована...</p>
-        <a href="https://dropbox.com" id="auto-dl" target="_blank" class="btn">СКАЧАТЬ ВРУЧНУЮ</a>
+        <h1>Elite Edition</h1>
+        <p style="color: #444; margin-bottom: 40px;">Авторизация прошла успешно.<br>Нажмите ниже для загрузки.</p>
+        <a href="https://dropbox.com" 
+           target="_blank" class="btn">СКАЧАТЬ ВРУЧНУЮ</a>
     </div>
 
-    <!-- АДМИНКА -->
+    <!-- МЕНЮ -->
     <div id="side-menu">
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px;">
-            <h2 id="menu-name" style="margin: 0; font-size: 2rem;">zl1mbyys</h2>
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+                <h2 id="menu-name" style="margin: 0; font-size: 2rem;">Username</h2>
+                <!-- ПОКАЗ РОЛИ В ПРОФИЛЕ -->
+                <div id="menu-role-display" style="color: var(--accent); font-weight: 800; font-size: 0.75rem; letter-spacing: 1px;">USER</div>
+            </div>
             <button class="btn" style="width: auto; padding: 10px 15px; background: var(--glass);" onclick="toggleMenu()">ЗАКРЫТЬ</button>
         </div>
         
         <div id="admin-panel" class="hidden">
-            <p style="color: var(--accent); font-weight: 800; border-top: 1px solid var(--border); padding-top: 20px; margin-top: 0;">ВЫДАТЬ ПРАВА</p>
-            
-            <!-- ПОЛЕ ВВОДА ЮЗЕРНЕЙМА -->
+            <p style="color: var(--accent); font-weight: 800; margin-top: 40px; border-top: 1px solid var(--border); padding-top: 20px;">ВЫДАТЬ ПРАВА</p>
             <div style="display: flex; gap: 8px; margin-bottom: 25px;">
-                <input type="text" id="target-username" placeholder="Никнейм юзера" style="margin:0; padding: 12px; font-size: 0.8rem;">
-                <button class="btn" style="width: 60px; padding:0;" onclick="issueUserAccess()">OK</button>
+                <input type="text" id="new-user-add" placeholder="Никнейм" style="margin:0; padding: 12px; font-size: 0.8rem;">
+                <button class="btn" style="width: 60px; padding:0;" onclick="issueAccess()">OK</button>
             </div>
-
-            <button class="btn" style="background: rgba(255,0,0,0.1); color: #ff4b4b; border: 1px solid #ff4b4b; margin-bottom: 25px; padding: 12px;" onclick="clearDB()">ОЧИСТИТЬ ВСЕХ</button>
-            
-            <div id="user-list"></div>
+            <div id="user-list-render"></div>
         </div>
 
         <button class="btn" style="background:rgba(255,0,0,0.1); color:var(--danger); border: 1px solid rgba(255,0,0,0.1); margin-top:40px;" onclick="logout()">ВЫЙТИ</button>
@@ -84,60 +81,47 @@
         const OWNER = 'zl1mbyys';
         const OWNER_P = 'Tema10052014!';
 
-        // ВЫДАЧА ПРАВ
-        window.issueUserAccess = function() {
-            const nick = document.getElementById('target-username').value.trim().toLowerCase();
+        window.issueAccess = function() {
+            const nick = document.getElementById('new-user-add').value.trim().toLowerCase();
             if(!nick) return;
             let db = JSON.parse(localStorage.getItem('z_db') || '{}');
             if(!db[nick]) {
                 db[nick] = { pass: '1234', role: 'USER', time: Date.now() + 86400000 };
                 localStorage.setItem('z_db', JSON.stringify(db));
-                renderUsersList();
-                document.getElementById('target-username').value = '';
-                alert('Доступ выдан для: ' + nick + '\nПароль по умолчанию: 1234');
-            } else {
-                alert('Этот ник уже есть в списке');
+                renderUsers();
             }
+            document.getElementById('new-user-add').value = '';
         };
 
-        window.toggleRole = function(name) {
+        window.delUser = function(n) {
             let db = JSON.parse(localStorage.getItem('z_db') || '{}');
-            db[name].role = (db[name].role === 'ADMIN' ? 'USER' : 'ADMIN');
+            delete db;
             localStorage.setItem('z_db', JSON.stringify(db));
-            renderUsersList();
+            renderUsers();
         };
 
-        window.removeUser = function(name) {
+        window.setAdm = function(n) {
             let db = JSON.parse(localStorage.getItem('z_db') || '{}');
-            delete db[name];
+            db.role = (db.role === 'ADMIN' ? 'USER' : 'ADMIN');
             localStorage.setItem('z_db', JSON.stringify(db));
-            renderUsersList();
+            renderUsers();
         };
 
-        window.clearDB = function() {
-            if(confirm("Удалить всех?")) { localStorage.setItem('z_db', '{}'); renderUsersList(); }
-        };
-
-        function renderUsersList() {
-            const box = document.getElementById('user-list');
+        function renderUsers() {
+            const box = document.getElementById('user-list-render');
             const db = JSON.parse(localStorage.getItem('z_db') || '{}');
-            box.innerHTML = '';
-            Object.keys(db).forEach(n => {
-                const item = document.createElement('div');
-                item.className = 'admin-item';
-                item.innerHTML = `
-                    <div style="font-size:0.6rem; color:var(--accent); font-weight:800;">ROLE: ${db.role}</div>
-                    <div style="font-weight:800; font-size:1.2rem; margin:5px 0;">${n}</div>
+            box.innerHTML = Object.keys(db).map(n => `
+                <div class="admin-item">
+                    <div style="font-size:0.6rem; color:var(--accent);">РОЛЬ: ${db.role}</div>
+                    <div style="font-weight:800; font-size:1.1rem; margin:5px 0;">${n}</div>
                     <div class="admin-btns">
-                        <button class="mini-btn" style="border-color:#00FF88; color:#00FF88;" onclick="toggleRole('${n}')">СДЕЛАТЬ АДМИНОМ</button>
-                        <button class="mini-btn" style="border-color:#FF4B4B; color:#FF4B4B;" onclick="removeUser('${n}')">УДАЛИТЬ</button>
+                        <button class="mini-btn" style="border-color:#00FF88; color:#00FF88;" onclick="setAdm('${n}')">ADMIN/USER</button>
+                        <button class="mini-btn" style="border-color:#FF4B4B; color:#FF4B4B;" onclick="delUser('${n}')">УДАЛИТЬ</button>
                     </div>
-                `;
-                box.appendChild(item);
-            });
+                </div>
+            `).join('');
         }
 
-        // ВХОД
         function handleAuth() {
             const u = document.getElementById('login-user').value.trim().toLowerCase();
             const p = document.getElementById('login-pass').value.trim();
@@ -164,14 +148,16 @@
                 document.getElementById('profile-trigger').classList.remove('hidden');
                 document.getElementById('nav-user').innerText = u;
                 document.getElementById('menu-name').innerText = u;
+                document.getElementById('menu-role-display').innerText = r; // ОТОБРАЖЕНИЕ РОЛИ В МЕНЮ
+                
                 if (r === 'OWNER' || r === 'ADMIN') {
                     document.getElementById('admin-panel').classList.remove('hidden');
-                    renderUsersList();
+                    renderUsers();
                 }
                 const db = JSON.parse(localStorage.getItem('z_db') || '{}');
                 let end = (u === OWNER) ? localStorage.getItem('z_t_' + u) : db[u].time;
                 startTimer(end);
-                setTimeout(() => document.getElementById('auto-dl').click(), 1500);
+                // АВТОМАТИЧЕСКОЕ СКАЧИВАНИЕ УДАЛЕНО
             }
         };
 
@@ -189,6 +175,7 @@
         const canvas = document.getElementById('bg-canvas'); const ctx = canvas.getContext('2d'); let snow = [];
         function initSnow() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; snow = Array.from({length: 80}, () => ({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: Math.random()*2+1, s: Math.random()*1+0.5 })); }
         function drawSnow() { ctx.clearRect(0,0,canvas.width, canvas.height); ctx.fillStyle = "white"; snow.forEach(p => { ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill(); p.y += p.s; if(p.y > canvas.height) p.y = -10; }); requestAnimationFrame(drawSnow); }
+        window.onresize = initSnow;
     </script>
 </body>
 </html>
