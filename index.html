@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zlimb OS | Elite Cloud</title>
+    <title>Zlimb OS | Elite Edition</title>
     <style>
         @import url('https://googleapis.com');
         
@@ -21,8 +21,17 @@
         .mesh-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(at 15% 15%, rgba(123, 97, 255, 0.15) 0px, transparent 40%), radial-gradient(at 85% 85%, rgba(0, 209, 255, 0.1) 0px, transparent 40%); z-index: -1; filter: blur(60px); }
         #particles-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
 
-        .glass-card { background: var(--glass); backdrop-filter: blur(40px) saturate(180%); border: 1px solid var(--border); border-radius: 40px; padding: 50px; text-align: center; box-shadow: 0 40px 100px rgba(0, 0, 0, 0.9); z-index: 10; width: 420px; animation: cardIn 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
-        @keyframes cardIn { from { opacity: 0; transform: scale(0.9) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        /* Главная карточка */
+        .glass-card { 
+            background: var(--glass); 
+            backdrop-filter: blur(40px) saturate(180%); 
+            border: 1px solid var(--border); 
+            border-radius: 40px; 
+            padding: 50px; text-align: center; 
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.9); 
+            z-index: 10; width: 420px; 
+            transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
 
         h1 { font-size: 2.6rem; font-weight: 800; margin: 0 0 30px; background: linear-gradient(135deg, #fff 40%, var(--accent) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         input { width: 100%; padding: 18px; margin-bottom: 12px; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border); border-radius: 16px; color: white; outline: none; box-sizing: border-box; font-size: 1rem; }
@@ -31,9 +40,18 @@
         .btn { width: 100%; background: var(--accent); color: white; border: none; padding: 18px; border-radius: 16px; font-weight: 700; cursor: pointer; transition: 0.4s; display: block; margin-top: 10px; text-decoration: none; font-size: 1rem; text-align: center; }
         .btn:hover { transform: translateY(-3px); box-shadow: 0 15px 30px var(--accent-glow); filter: brightness(1.1); }
 
+        /* Кнопка Профиля */
         #profile-trigger { position: fixed; top: 30px; right: 30px; z-index: 100; background: var(--glass); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 20px; padding: 10px 22px; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: 0.3s; }
 
-        #side-menu { position: fixed; top: 0; right: 0; height: 100vh; width: 380px; background: rgba(8, 9, 13, 0.95); backdrop-filter: blur(60px); border-left: 1px solid var(--border); z-index: 150; padding: 50px 40px; transition: 0.6s cubic-bezier(0.19, 1, 0.22, 1); transform: translateX(100%); overflow-y: auto; }
+        /* Боковое меню (теперь открывается ПОВЕРХ, не закрывая центр) */
+        #side-menu { 
+            position: fixed; top: 0; right: 0; height: 100vh; width: 380px; 
+            background: rgba(8, 9, 13, 0.95); backdrop-filter: blur(60px); 
+            border-left: 1px solid var(--border); z-index: 150; 
+            padding: 50px 40px; transition: 0.6s cubic-bezier(0.19, 1, 0.22, 1); 
+            transform: translateX(100%); overflow-y: auto; 
+            box-sizing: border-box;
+        }
         #side-menu.active { transform: translateX(0); box-shadow: -40px 0 100px rgba(0,0,0,0.8); }
 
         .role-badge { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; padding: 4px 12px; border-radius: 8px; margin-bottom: 10px; display: inline-block; }
@@ -50,7 +68,7 @@
 
     <!-- ПРОФИЛЬ -->
     <div id="profile-trigger" class="hidden" onclick="toggleMenu()">
-        <span id="nav-user" style="font-weight: 600;">Никнейм</span>
+        <span id="nav-user" style="font-weight: 600;">Username</span>
         <div style="width:10px; height:10px; background: #2ECC71; border-radius:50%; box-shadow:0 0 10px #2ECC71;"></div>
     </div>
 
@@ -58,31 +76,32 @@
     <div class="glass-card" id="screen-auth">
         <h1>Zlimb OS</h1>
         <input type="text" id="login-user" placeholder="Логин">
-        <div id="pass-field" class="hidden"><input type="password" id="login-pass" placeholder="Пароль владельца/админа"></div>
+        <div id="pass-field" class="hidden"><input type="password" id="login-pass" placeholder="Пароль"></div>
         <div id="setup-pass-field" class="hidden">
-            <p style="font-size: 0.8rem; color: var(--accent); margin-bottom: 10px;">Вам выдан доступ. Создайте пароль:</p>
+            <p style="font-size: 0.8rem; color: var(--accent); margin-bottom: 10px;">Вам выдан доступ. Установите пароль:</p>
             <input type="password" id="setup-new-pass" placeholder="Новый пароль">
         </div>
-        <button class="btn" onclick="handleAuth()">ВОЙТИ</button>
+        <button class="btn" onclick="handleAuth()">Войти</button>
     </div>
 
-    <!-- СКАЧАТЬ -->
+    <!-- ЛАУНЧЕР (Остается видимым, когда открыто меню) -->
     <div class="glass-card hidden" id="screen-launcher">
         <h1>Zlimb Ultra</h1>
-        <p style="color: rgba(255,255,255,0.4); margin-bottom: 40px; line-height: 1.6;">Версия v1.0.6 Elite.<br>Нажмите на кнопку для мгновенной загрузки.</p>
+        <p style="color: rgba(255,255,255,0.4); margin-bottom: 40px; line-height: 1.6;">Версия v1.0.6 Elite ready.</p>
         
-        <!-- ССЫЛКА DROPBOX С ПАРАМЕТРОМ dl=1 ДЛЯ ПРЯМОГО СКАЧИВАНИЯ -->
-        <a href="https://dropbox.com" class="btn">СКАЧАТЬ СЕЙЧАС</a>
+        <!-- target="_blank" открывает скачивание в новом окне/вкладке -->
+        <a href="https://dropbox.com" 
+           target="_blank" 
+           class="btn">МГНОВЕННАЯ СКАЧКА</a>
     </div>
 
-    <!-- БОКОВОЕ МЕНЮ -->
+    <!-- БОКОВОЕ МЕНЮ (Выезжает ПОВЕРХ) -->
     <div id="side-menu">
         <div class="role-badge" id="menu-role-badge">USER</div>
-        <h2 id="menu-name" style="margin: 0; font-size: 2rem; font-weight: 800;">Никнейм</h2>
+        <h2 id="menu-name" style="margin: 0; font-size: 2rem; font-weight: 800;">Username</h2>
         
         <div id="admin-section" class="hidden" style="margin-top: 40px; border-top: 1px solid var(--border); padding-top: 30px;">
             <p style="color: var(--accent); font-weight: 800; font-size: 0.8rem; margin-bottom: 20px;">АДМИН-ЦЕНТР</p>
-            
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 25px;">
                 <button class="btn" style="background: var(--glass); margin:0;" onclick="setTheme('snow')">СНЕГ</button>
                 <button class="btn" style="background: var(--glass); margin:0;" onclick="setTheme('matrix')">МАТРИЦА</button>
@@ -91,16 +110,14 @@
             <div id="owner-controls" class="hidden">
                 <p style="color: #555; font-size: 0.7rem; font-weight: 800; margin-bottom: 10px;">ВЫДАТЬ ПРАВА</p>
                 <div style="display: flex; gap: 10px;">
-                    <input type="text" id="target-nick" placeholder="Никнейм" style="margin:0; padding: 12px;">
+                    <input type="text" id="target-nick" placeholder="Ник" style="margin:0; padding: 12px;">
                     <button class="btn" style="margin:0; width: 80px;" onclick="addAdmin()">OK</button>
                 </div>
-                
-                <p style="color: #555; font-size: 0.7rem; font-weight: 800; margin-top: 30px; margin-bottom: 15px;">СПИСОК АДМИНОВ</p>
-                <div id="admin-list-box"></div>
+                <div id="admin-list-box" style="margin-top:20px"></div>
             </div>
         </div>
 
-        <button class="btn" style="background:rgba(255,0,0,0.1); color:var(--danger); margin-top:60px; border:1px solid rgba(255,0,0,0.2);" onclick="logout()">ВЫЙТИ</button>
+        <button class="btn" style="background:rgba(255,0,0,0.1); color:var(--danger); margin-top:50px; border:1px solid rgba(255,0,0,0.2);" onclick="logout()">ВЫЙТИ</button>
         <button class="btn" style="background: var(--glass); margin-top: 15px;" onclick="toggleMenu()">ЗАКРЫТЬ</button>
     </div>
 
@@ -172,7 +189,7 @@
         function updateAdminList() {
             const box = document.getElementById('admin-list-box');
             const list = JSON.parse(localStorage.getItem('z_whitelist') || '[]');
-            box.innerHTML = list.length ? '' : '<p style="color:#444; font-size:0.8rem;">Список пуст</p>';
+            box.innerHTML = '';
             list.forEach(nick => {
                 const div = document.createElement('div');
                 div.className = 'admin-item';
@@ -200,7 +217,10 @@
             }
         }
 
-        function toggleMenu() { document.getElementById('side-menu').classList.toggle('active'); }
+        function toggleMenu() { 
+            document.getElementById('side-menu').classList.toggle('active'); 
+        }
+
         function setTheme(t) { localStorage.setItem('z_theme', t); location.reload(); }
         function logout() { localStorage.removeItem('z_user'); localStorage.removeItem('z_admin'); location.reload(); }
 
