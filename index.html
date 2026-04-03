@@ -9,98 +9,45 @@
         
         :root { 
             --accent: #7B61FF; 
-            --bg: #000000; /* ЧИСТО ЧЕРНЫЙ */
+            --bg: #000000; /* ЧИСТО ЧЕРНЫЙ ФОН */
             --glass: rgba(255, 255, 255, 0.05);
             --border: rgba(255, 255, 255, 0.1);
             --danger: #FF4B4B;
+            --success: #00FF88;
         }
 
-        body { 
-            margin: 0; 
-            background-color: var(--bg); 
-            color: white; 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            overflow: hidden; 
-            height: 100vh; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-        }
-        
-        /* Снег на черном фоне */
-        #bg-canvas { 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            pointer-events: none; 
-            z-index: 1; 
-        }
+        body { margin: 0; background: var(--bg); color: white; font-family: 'Plus Jakarta Sans', sans-serif; overflow: hidden; height: 100vh; display: flex; justify-content: center; align-items: center; }
+        #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
 
         /* Таймер и Профиль */
-        #session-timer { 
-            position: fixed; top: 30px; left: 30px; z-index: 999; 
-            background: var(--glass); border: 1px solid var(--border); 
-            padding: 12px 20px; border-radius: 18px; backdrop-filter: blur(20px); 
-            font-family: monospace; color: var(--accent); display: none; 
-        }
-        
-        #profile-trigger { 
-            position: fixed; top: 30px; right: 30px; z-index: 999; 
-            background: var(--glass); border: 1px solid var(--border); 
-            border-radius: 22px; padding: 10px 24px; cursor: pointer; 
-            display: flex; align-items: center; gap: 12px; 
-        }
+        #session-timer { position: fixed; top: 30px; left: 30px; z-index: 999; background: var(--glass); border: 1px solid var(--border); padding: 12px 20px; border-radius: 18px; backdrop-filter: blur(20px); font-family: monospace; color: var(--accent); display: none; }
+        #profile-trigger { position: fixed; top: 30px; right: 30px; z-index: 999; background: var(--glass); border: 1px solid var(--border); border-radius: 22px; padding: 10px 24px; cursor: pointer; display: flex; align-items: center; gap: 12px; }
 
-        /* Карточки */
-        .glass-card { 
-            background: rgba(255, 255, 255, 0.02); 
-            border: 1px solid var(--border); 
-            border-radius: 40px; padding: 50px; 
-            text-align: center; width: 420px; z-index: 100; 
-        }
-
+        .glass-card { background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border); border-radius: 40px; padding: 50px; text-align: center; width: 420px; z-index: 100; box-shadow: 0 0 50px rgba(0,0,0,1); }
         h1 { font-size: 2.6rem; font-weight: 800; margin: 0 0 30px; color: #fff; }
         
-        input { 
-            width: 100%; padding: 18px; background: #111; 
-            border: 1px solid var(--border); border-radius: 16px; 
-            color: white; outline: none; margin-bottom: 12px; box-sizing: border-box; 
-        }
-        
-        .btn { 
-            width: 100%; background: var(--accent); color: white; 
-            border: none; padding: 18px; border-radius: 16px; 
-            font-weight: 700; cursor: pointer; display: block; 
-            text-decoration: none; text-align: center; 
-        }
+        input { width: 100%; padding: 18px; background: #111; border: 1px solid var(--border); border-radius: 16px; color: white; outline: none; margin-bottom: 12px; box-sizing: border-box; }
+        .btn { width: 100%; background: var(--accent); color: white; border: none; padding: 18px; border-radius: 16px; font-weight: 700; cursor: pointer; display: block; text-decoration: none; text-align: center; }
 
         /* АДМИНКА */
-        #side-menu { 
-            position: fixed; top: 0; right: 0; height: 100vh; width: 400px; 
-            background: #080808; border-left: 1px solid var(--border); 
-            z-index: 1000; padding: 60px 40px; transition: 0.5s; 
-            transform: translateX(100%); overflow-y: auto; box-sizing: border-box; 
-        }
+        #side-menu { position: fixed; top: 0; right: 0; height: 100vh; width: 420px; background: #080808; border-left: 1px solid var(--border); z-index: 1000; padding: 60px 40px; transition: 0.5s; transform: translateX(100%); overflow-y: auto; box-sizing: border-box; }
         #side-menu.active { transform: translateX(0); }
         
-        .admin-box { margin-top: 30px; border-top: 1px solid var(--border); padding-top: 20px; }
-        .user-row { 
-            background: #111; padding: 12px; border-radius: 12px; 
-            margin-top: 10px; display: flex; justify-content: space-between; 
-            align-items: center; border: 1px solid var(--border); 
-        }
+        .admin-item { background: #111; padding: 20px; border-radius: 20px; margin-bottom: 15px; border: 1px solid var(--border); }
+        .adm-tag { font-size: 0.6rem; font-weight: 800; color: var(--accent); margin-bottom: 5px; display: block; }
+        .admin-btns { display: flex; gap: 10px; margin-top: 15px; }
+        .m-btn { flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--border); background: none; color: #fff; cursor: pointer; font-size: 0.7rem; font-weight: 700; }
+        .m-btn-green { border-color: var(--success); color: var(--success); }
+        .m-btn-red { border-color: var(--danger); color: var(--danger); }
         
         .hidden { display: none !important; }
     </style>
 </head>
 <body>
     <canvas id="bg-canvas"></canvas>
-    
     <div id="session-timer">ОСТАЛОСЬ: <span id="time-val">24:00:00</span></div>
 
-    <!-- КНОПКА ПРОФИЛЬ -->
+    <!-- ПРОФИЛЬ -->
     <div id="profile-trigger" class="hidden" onclick="toggleMenu()">
         <span id="nav-user">zl1mbyys</span>
         <div style="width:10px; height:10px; background: #2ECC71; border-radius:50%;"></div>
@@ -112,26 +59,28 @@
         <input type="text" id="login-user" placeholder="Логин">
         <input type="password" id="login-pass" placeholder="Пароль">
         <button class="btn" onclick="handleAuth()">ВОЙТИ</button>
+        <p style="font-size: 0.7rem; color: #444; margin-top: 20px; cursor: pointer;" onclick="alert('Регистрация доступна только через Владельца')">НЕТ АККАУНТА?</p>
     </div>
 
     <!-- ЛАУНЧЕР -->
     <div class="glass-card hidden" id="screen-launcher">
         <h1>Zlimb Ultra</h1>
-        <p style="color: #666; margin-bottom: 40px;">Авто-загрузка ZlimbClicker.exe...</p>
-        <a href="https://dropbox.com" 
-           id="auto-dl" target="_blank" class="btn">СКАЧАТЬ ВРУЧНУЮ</a>
+        <p style="color: #555; margin-bottom: 40px;">Авто-загрузка ZlimbClicker.exe...</p>
+        <a href="https://dropbox.com" id="auto-dl" target="_blank" class="btn">СКАЧАТЬ ВРУЧНУЮ</a>
     </div>
 
-    <!-- БОКОВОЕ МЕНЮ (АДМИНКА) -->
+    <!-- БОКОВОЕ МЕНЮ С ВЫДАЧЕЙ ПРАВ -->
     <div id="side-menu">
         <h2 id="menu-name">Username</h2>
-        <div id="admin-panel" class="admin-box hidden">
-            <p style="color: var(--accent); font-weight: 800; font-size: 0.8rem;">АДМИН-ПАНЕЛЬ</p>
-            <div style="display: flex; gap: 8px; margin-bottom: 20px;">
-                <input type="text" id="new-user-nick" placeholder="Никнейм" style="margin:0; padding: 12px; font-size: 0.8rem;">
+        <div id="admin-panel" class="hidden">
+            <p style="color: var(--accent); font-weight: 800; margin-top: 40px; border-top: 1px solid var(--border); padding-top: 20px;">УПРАВЛЕНИЕ АДМИНКАМИ</p>
+            
+            <div style="display: flex; gap: 8px; margin-bottom: 25px;">
+                <input type="text" id="new-user" placeholder="Новый ник" style="margin:0; padding: 12px; font-size: 0.8rem;">
                 <button class="btn" style="width: 60px; padding:0;" onclick="addUser()">OK</button>
             </div>
-            <div id="user-list-container"></div>
+
+            <div id="user-list-render"></div>
         </div>
         <button class="btn" style="background:rgba(255,0,0,0.1); color:var(--danger); margin-top:60px;" onclick="logout()">ВЫЙТИ</button>
     </div>
@@ -141,13 +90,13 @@
         const OWNER_P = 'Tema10052014!';
 
         function handleAuth() {
-            const u = document.getElementById('login-user').value.trim();
+            const u = document.getElementById('login-user').value.trim().toLowerCase();
             const p = document.getElementById('login-pass').value.trim();
             const db = JSON.parse(localStorage.getItem('z_db') || '{}');
 
             if (u === OWNER && p === OWNER_P) { login(u, 'OWNER'); }
             else if (db[u] && db[u].pass === p) { login(u, db[u].role); }
-            else { alert('Доступ запрещен'); }
+            else { alert('Ошибка: Неверный логин или пароль'); }
         }
 
         function login(u, role) {
@@ -168,6 +117,7 @@
                 document.getElementById('nav-user').innerText = u;
                 document.getElementById('menu-name').innerText = u;
                 
+                // ВЫДАЧА АДМИНОК ДОСТУПНА OWNER И ADMIN
                 if (r === 'OWNER' || r === 'ADMIN') {
                     document.getElementById('admin-panel').classList.remove('hidden');
                     renderUsers();
@@ -178,24 +128,36 @@
         };
 
         function addUser() {
-            const nick = document.getElementById('new-user-nick').value.trim();
+            const nick = document.getElementById('new-user').value.trim().toLowerCase();
             if(!nick) return;
             let db = JSON.parse(localStorage.getItem('z_db') || '{}');
-            db[nick] = { pass: '1234', role: 'USER' }; // Пароль по умолчанию 1234
+            if(!db[nick]) db[nick] = { pass: '1234', role: 'USER' }; // Пароль по умолчанию
             localStorage.setItem('z_db', JSON.stringify(db));
             renderUsers();
-            document.getElementById('new-user-nick').value = '';
+            document.getElementById('new-user').value = '';
         }
 
         function renderUsers() {
-            const box = document.getElementById('user-list-container');
+            const box = document.getElementById('user-list-render');
             const db = JSON.parse(localStorage.getItem('z_db') || '{}');
             box.innerHTML = Object.keys(db).map(n => `
-                <div class="user-row">
-                    <span style="font-size:0.9rem;">${n}</span>
-                    <button onclick="delUser('${n}')" style="color:red; background:none; border:none; cursor:pointer;">X</button>
+                <div class="admin-item">
+                    <span class="adm-tag">ROLE: ${db.role}</span>
+                    <span style="font-weight:800; font-size:1.1rem;">${n}</span>
+                    <div class="admin-btns">
+                        <button class="m-btn m-btn-green" onclick="setAdmin('${n}')">СДЕЛАТЬ АДМИНОМ</button>
+                        <button class="m-btn m-btn-red" onclick="delUser('${n}')">УДАЛИТЬ</button>
+                    </div>
                 </div>
             `).join('');
+        }
+
+        function setAdmin(n) {
+            let db = JSON.parse(localStorage.getItem('z_db') || '{}');
+            db.role = 'ADMIN';
+            localStorage.setItem('z_db', JSON.stringify(db));
+            renderUsers();
+            alert(n + ' теперь Админ!');
         }
 
         function delUser(n) {
@@ -205,7 +167,7 @@
             renderUsers();
         }
 
-        // Логика Таймера, Снега и Выхода
+        // Таймер, Снег и Выход
         function startTimer(u) {
             document.getElementById('session-timer').style.display = 'block';
             setInterval(() => {
@@ -216,13 +178,14 @@
             }, 1000);
         }
         function toggleMenu() { document.getElementById('side-menu').classList.toggle('active'); }
-        function logout() { localStorage.removeItem('z_cur'); location.reload(); }
+        function logout() { localStorage.removeItem('z_cur'); localStorage.removeItem('z_role'); location.reload(); }
         
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         let snow = [];
         function initSnow() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; snow = Array.from({length: 80}, () => ({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: Math.random()*2+1, s: Math.random()*1+0.5 })); }
         function drawSnow() { ctx.clearRect(0,0,canvas.width, canvas.height); ctx.fillStyle = "white"; snow.forEach(p => { ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill(); p.y += p.s; if(p.y > canvas.height) p.y = -10; }); requestAnimationFrame(drawSnow); }
+        window.onresize = initSnow;
     </script>
 </body>
 </html>
