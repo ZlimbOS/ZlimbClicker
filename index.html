@@ -13,7 +13,6 @@
             --glass: rgba(255, 255, 255, 0.05);
             --border: rgba(255, 255, 255, 0.1);
             --danger: #FF4B4B;
-            --success: #00FF88;
         }
 
         body { margin: 0; background: var(--bg); color: white; font-family: 'Plus Jakarta Sans', sans-serif; overflow: hidden; height: 100vh; display: flex; justify-content: center; align-items: center; }
@@ -24,11 +23,10 @@
         
         /* Кнопка Профиля */
         #profile-trigger { position: fixed; top: 30px; right: 30px; z-index: 999; background: var(--glass); border: 1px solid var(--border); border-radius: 22px; padding: 10px 24px; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: 0.3s; }
-        #profile-trigger:hover { border-color: var(--accent); }
 
         /* Карточки */
         .glass-card { background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border); border-radius: 40px; padding: 50px; text-align: center; width: 420px; z-index: 100; box-shadow: 0 0 50px #000; }
-        h1 { font-size: 2.6rem; font-weight: 800; margin: 0 0 30px; color: #fff; }
+        h1 { font-size: 2.5rem; font-weight: 800; margin: 0 0 30px; }
         
         input { width: 100%; padding: 18px; background: #0a0a0a; border: 1px solid var(--border); border-radius: 16px; color: white; outline: none; margin-bottom: 12px; box-sizing: border-box; }
         .btn { width: 100%; background: var(--accent); color: white; border: none; padding: 18px; border-radius: 16px; font-weight: 700; cursor: pointer; display: block; text-decoration: none; text-align: center; transition: 0.3s; }
@@ -40,16 +38,9 @@
             position: fixed; top: 0; right: 0; height: 100vh; width: 420px; 
             background: #080808; border-left: 1px solid var(--border); 
             z-index: 1000; padding: 60px 40px; transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1); 
-            transform: translateX(100%); overflow-y: auto; box-sizing: border-box; 
+            transform: translateX(100%); box-sizing: border-box; 
         }
         #side-menu.active { transform: translateX(0); }
-        
-        .admin-item { background: #111; padding: 20px; border-radius: 20px; margin-bottom: 15px; border: 1px solid var(--border); }
-        .adm-tag { font-size: 0.6rem; font-weight: 800; color: var(--accent); margin-bottom: 5px; display: block; }
-        .admin-btns { display: flex; gap: 10px; margin-top: 15px; }
-        .m-btn { flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--border); background: none; color: #fff; cursor: pointer; font-size: 0.7rem; font-weight: 700; }
-        .m-btn-green { border-color: var(--success); color: var(--success); }
-        .m-btn-red { border-color: var(--danger); color: var(--danger); }
         
         .hidden { display: none !important; }
     </style>
@@ -58,7 +49,7 @@
     <canvas id="bg-canvas"></canvas>
     <div id="session-timer">ОСТАЛОСЬ: <span id="time-val">24:00:00</span></div>
 
-    <!-- КНОПКА ПРОФИЛЬ -->
+    <!-- ПРОФИЛЬ -->
     <div id="profile-trigger" class="hidden" onclick="toggleMenu()">
         <span id="nav-user">User</span>
         <div style="width:10px; height:10px; background: #2ECC71; border-radius:50%; box-shadow: 0 0 10px #2ECC71;"></div>
@@ -75,14 +66,14 @@
 
     <!-- РЕГИСТРАЦИЯ -->
     <div class="glass-card hidden" id="screen-reg">
-        <h1>Создать аккаунт</h1>
-        <input type="text" id="reg-user" placeholder="Никнейм">
+        <h1>Регистрация</h1>
+        <input type="text" id="reg-user" placeholder="Логин">
         <input type="password" id="reg-pass" placeholder="Пароль">
-        <button class="btn" onclick="handleReg()">ЗАРЕГИСТРИРОВАТЬСЯ</button>
+        <button class="btn" onclick="handleReg()">СОЗДАТЬ</button>
         <button class="btn btn-sec" onclick="switchForm('auth')">НАЗАД</button>
     </div>
 
-    <!-- ЛАУНЧЕР -->
+    <!-- ЭКРАН СКАЧИВАНИЯ -->
     <div class="glass-card hidden" id="screen-launcher">
         <h1>Zlimb Ultra</h1>
         <p style="color: #444; margin-bottom: 40px;">Авторизация успешна.<br>Нажмите кнопку для загрузки.</p>
@@ -90,24 +81,15 @@
            target="_blank" class="btn">СКАЧАТЬ ВРУЧНУЮ</a>
     </div>
 
-    <!-- АДМИНКА (МЕНЮ) -->
+    <!-- МЕНЮ ПРОФИЛЯ -->
     <div id="side-menu">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px;">
             <div>
                 <h2 id="menu-name" style="margin: 0; font-size: 2.2rem;">Username</h2>
-                <!-- ОТОБРАЖЕНИЕ РОЛИ -->
-                <div id="menu-role-display" style="color: var(--accent); font-weight: 800; font-size: 0.75rem; letter-spacing: 1px;">РОЛЬ: USER</div>
+                <div id="menu-role-display" style="color: var(--accent); font-weight: 800; font-size: 0.75rem; letter-spacing: 1px;">ROLE: USER</div>
             </div>
+            <!-- КНОПКА ЗАКРЫТЬ -->
             <button class="btn" style="width: auto; padding: 10px 20px; background: var(--glass); border: 1px solid var(--border);" onclick="toggleMenu()">ЗАКРЫТЬ</button>
-        </div>
-
-        <div id="admin-panel" class="hidden">
-            <p style="color: #fff; font-weight: 800; border-top: 1px solid var(--border); padding-top: 25px;">УПРАВЛЕНИЕ ДОСТУПОМ</p>
-            <div style="display: flex; gap: 8px; margin-bottom: 25px;">
-                <input type="text" id="new-user-nick" placeholder="Никнейм" style="margin:0; padding: 12px; font-size: 0.8rem;">
-                <button class="btn" style="width: 60px; padding:0;" onclick="issueAccess()">OK</button>
-            </div>
-            <div id="user-list-render"></div>
         </div>
 
         <button class="btn" style="background:rgba(255,0,0,0.1); color:var(--danger); border: 1px solid rgba(255,0,0,0.1); margin-top:40px;" onclick="logout()">ВЫЙТИ</button>
@@ -117,58 +99,15 @@
         const OWNER = 'zl1mbyys';
         const OWNER_P = 'Tema10052014!';
 
-        // Глобальные функции админки
-        window.issueAccess = function() {
-            const nick = document.getElementById('new-user-nick').value.trim().toLowerCase();
-            if(!nick) return;
-            let db = JSON.parse(localStorage.getItem('z_db') || '{}');
-            if(!db[nick]) {
-                db[nick] = { pass: '1234', role: 'USER', time: Date.now() + 86400000 };
-                localStorage.setItem('z_db', JSON.stringify(db));
-                renderUsers();
-            }
-            document.getElementById('new-user-nick').value = '';
-        };
-
-        window.delUser = function(n) {
-            let db = JSON.parse(localStorage.getItem('z_db') || '{}');
-            delete db;
-            localStorage.setItem('z_db', JSON.stringify(db));
-            renderUsers();
-        };
-
-        window.setAdm = function(n) {
-            let db = JSON.parse(localStorage.getItem('z_db') || '{}');
-            db.role = (db.role === 'ADMIN' ? 'USER' : 'ADMIN');
-            localStorage.setItem('z_db', JSON.stringify(db));
-            renderUsers();
-        };
-
-        function renderUsers() {
-            const box = document.getElementById('user-list-render');
-            const db = JSON.parse(localStorage.getItem('z_db') || '{}');
-            box.innerHTML = Object.keys(db).map(n => `
-                <div class="admin-item">
-                    <span class="adm-tag">STATUS: ${db.role}</span>
-                    <span style="font-weight:800; font-size:1.2rem;">${n}</span>
-                    <div class="admin-btns">
-                        <button class="m-btn m-btn-green" onclick="setAdm('${n}')">ADMIN/USER</button>
-                        <button class="m-btn m-btn-red" onclick="delUser('${n}')">УДАЛИТЬ</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Авторизация и Сессия
         function handleReg() {
             const u = document.getElementById('reg-user').value.trim().toLowerCase();
             const p = document.getElementById('reg-pass').value.trim();
             if(!u || !p) return;
             let db = JSON.parse(localStorage.getItem('z_db') || '{}');
-            if(db[u] || u === OWNER) return alert('Занято!');
+            if(db[u] || u === OWNER) return alert('Ник занят!');
             db[u] = { pass: p, role: 'USER', time: Date.now() + 86400000 };
             localStorage.setItem('z_db', JSON.stringify(db));
-            alert('Регистрация успешна!'); switchForm('auth');
+            alert('Аккаунт создан!'); switchForm('auth');
         }
 
         function handleAuth() {
@@ -178,7 +117,7 @@
 
             if (u === OWNER && p === OWNER_P) { login(u, 'OWNER'); }
             else if (db[u] && db[u].pass === p) { login(u, db[u].role); }
-            else { alert('Ошибка доступа!'); }
+            else { alert('Неверные данные'); }
         }
 
         function login(u, role) {
@@ -198,12 +137,8 @@
                 document.getElementById('profile-trigger').classList.remove('hidden');
                 document.getElementById('nav-user').innerText = u;
                 document.getElementById('menu-name').innerText = u;
-                document.getElementById('menu-role-display').innerText = 'РОЛЬ: ' + r;
+                document.getElementById('menu-role-display').innerText = 'ROLE: ' + r;
                 
-                if (r === 'OWNER' || r === 'ADMIN') {
-                    document.getElementById('admin-panel').classList.remove('hidden');
-                    renderUsers();
-                }
                 const db = JSON.parse(localStorage.getItem('z_db') || '{}');
                 let end = (u === OWNER) ? localStorage.getItem('z_t_' + u) : (db[u] ? db[u].time : Date.now());
                 startTimer(end);
@@ -224,7 +159,6 @@
         function toggleMenu() { document.getElementById('side-menu').classList.toggle('active'); }
         function logout() { localStorage.removeItem('z_cur'); localStorage.removeItem('z_role'); location.reload(); }
         
-        // Снег
         const canvas = document.getElementById('bg-canvas'); const ctx = canvas.getContext('2d'); let snow = [];
         function initSnow() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; snow = Array.from({length: 80}, () => ({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: Math.random()*2+1, s: Math.random()*1+0.5 })); }
         function drawSnow() { ctx.clearRect(0,0,canvas.width, canvas.height); ctx.fillStyle = "white"; snow.forEach(p => { ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill(); p.y += p.s; if(p.y > canvas.height) p.y = -10; }); requestAnimationFrame(drawSnow); }
