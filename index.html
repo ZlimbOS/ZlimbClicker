@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zlimb OS | Premium Edition</title>
+    <title>Zlimb OS | Next Gen Launcher</title>
     <style>
         @import url('https://googleapis.com');
         
@@ -30,14 +30,11 @@
                 radial-gradient(at 100% 100%, rgba(0, 209, 255, 0.1) 0px, transparent 50%);
             z-index: -1; animation: meshAnim 10s infinite alternate;
         }
-        @keyframes meshAnim {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.1); }
-        }
+        @keyframes meshAnim { 0% { transform: scale(1); } 100% { transform: scale(1.1); } }
 
         #particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
 
-        /* Карточки (Glassmorphism) */
+        /* Стеклянные карточки */
         .glass-card { 
             background: var(--glass); 
             backdrop-filter: blur(40px) saturate(150%); 
@@ -76,10 +73,11 @@
             font-weight: 700; cursor: pointer; transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1); 
             font-size: 1.1rem; text-decoration: none; display: block;
             box-shadow: 0 10px 30px rgba(123, 97, 255, 0.3);
+            text-align: center;
         }
         .btn-main:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(123, 97, 255, 0.5); filter: brightness(1.1); }
 
-        /* Верхняя панель профиля */
+        /* Кнопка профиля в углу */
         #profile-hub {
             position: fixed; top: 35px; right: 35px; z-index: 100;
             background: var(--glass); backdrop-filter: blur(20px);
@@ -99,7 +97,6 @@
         }
         #side-panel.open { transform: translateX(0); box-shadow: -50px 0 100px rgba(0,0,0,0.8); }
 
-        .status-dot { width: 8px; height: 8px; background: #2ECC71; border-radius: 50%; box-shadow: 0 0 10px #2ECC71; }
         .hidden { display: none; }
         .snowflake { position: absolute; background: white; border-radius: 50%; pointer-events: none; }
     </style>
@@ -110,52 +107,53 @@
 
     <!-- HUB ПРОФИЛЯ -->
     <div id="profile-hub" class="hidden" onclick="toggleSidebar()">
-        <div class="status-dot"></div>
-        <span id="nav-name" style="font-weight: 600; font-size: 0.9rem;">Guest</span>
-        <img src="https://flaticon.com" width="24" style="filter: invert(1); opacity: 0.8;">
+        <div style="width: 8px; height: 8px; background: #2ECC71; border-radius: 50%; box-shadow: 0 0 10px #2ECC71;"></div>
+        <span id="nav-name" style="font-weight: 600; font-size: 0.9rem;">User</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
     </div>
 
-    <!-- ОКНО АВТОРИЗАЦИИ -->
+    <!-- ОКНО ВХОДА -->
     <div class="glass-card" id="auth-screen">
         <h1>Zlimb OS</h1>
-        <input type="text" id="login-user" placeholder="Username">
-        <div id="pass-field" class="hidden"><input type="password" id="login-pass" placeholder="System Key"></div>
+        <input type="text" id="login-user" placeholder="Логин">
+        <div id="pass-field" class="hidden"><input type="password" id="login-pass" placeholder="Пароль администратора"></div>
         <div id="setup-pass-field" class="hidden">
-            <p style="font-size: 0.8rem; color: var(--accent-2); margin-bottom: 10px;">Access Granted. Set your password:</p>
-            <input type="password" id="setup-new-pass" placeholder="New Password">
+            <p style="font-size: 0.8rem; color: var(--accent-2); margin-bottom: 10px;">Вам выдан доступ. Создайте пароль:</p>
+            <input type="password" id="setup-new-pass" placeholder="Придумайте пароль">
         </div>
-        <button class="btn-main" onclick="handleAuth()">Initialize System</button>
+        <button class="btn-main" onclick="handleAuth()">Авторизация</button>
     </div>
 
     <!-- ОКНО ЛАУНЧЕРА -->
     <div class="glass-card hidden" id="launcher-screen">
-        <h1 style="font-size: 2rem;">Launcher</h1>
-        <p style="color: rgba(255,255,255,0.4); margin-bottom: 45px; line-height: 1.6;">Ваша персональная сборка Zlimb Ultra v1.0.6 готова к запуску в облаке.</p>
-        <a href="https://yandex.ru" target="_blank" class="btn-main">Download Package</a>
+        <h1 style="font-size: 2rem;">Zlimb Ultra</h1>
+        <p style="color: rgba(255,255,255,0.4); margin-bottom: 45px; line-height: 1.6;">Пакет Zlimb Launcher v1.0.6 готов. Используйте кнопку ниже для загрузки с облака.</p>
+        <!-- ТВОЯ ССЫЛКА ТУТ -->
+        <a href="https://disk.yandex.ru/d/xUvvDNlmnfo6Kw" target="_blank" class="btn-main">СКАЧАТЬ ЛАУНЧЕР</a>
     </div>
 
     <!-- БОКОВАЯ ПАНЕЛЬ -->
     <div id="side-panel">
         <h2 id="menu-user" style="margin: 0; font-size: 1.8rem; font-weight: 800;">User</h2>
-        <p id="menu-role" style="font-size: 0.7rem; color: var(--accent); text-transform: uppercase; letter-spacing: 3px; margin-top: 5px;">Standard Account</p>
+        <p id="menu-role" style="font-size: 0.7rem; color: var(--accent); text-transform: uppercase; letter-spacing: 3px; margin-top: 5px;">ACCOUNT STATUS</p>
         
         <div id="admin-hub" class="hidden" style="margin-top: 50px; border-top: 1px solid var(--border); padding-top: 30px;">
-            <p style="color: #FF4B4B; font-weight: 800; font-size: 0.8rem; margin-bottom: 20px;">ADMIN COMMAND CENTER</p>
+            <p style="color: #FF4B4B; font-weight: 800; font-size: 0.8rem; margin-bottom: 20px;">ADMIN TOOLS</p>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                <button class="btn-main" style="padding: 12px; font-size: 0.8rem; background: var(--glass);" onclick="setTheme('snow')">Snow</button>
-                <button class="btn-main" style="padding: 12px; font-size: 0.8rem; background: var(--glass);" onclick="setTheme('matrix')">Matrix</button>
+                <button class="btn-main" style="padding: 12px; font-size: 0.8rem; background: var(--glass);" onclick="setTheme('snow')">Снег</button>
+                <button class="btn-main" style="padding: 12px; font-size: 0.8rem; background: var(--glass);" onclick="setTheme('matrix')">Матрица</button>
             </div>
 
             <!-- ВЫДАЧА АДМИНКИ -->
             <div id="owner-only" class="hidden" style="margin-top: 35px;">
-                <p style="font-size: 0.7rem; color: #555; margin-bottom: 10px;">GRANT PERMISSIONS</p>
-                <input type="text" id="target-nick" placeholder="Target Username" style="font-size: 0.8rem; padding: 15px;">
-                <button class="btn-main" style="background: #FF4B4B;" onclick="grantAdmin()">Grant Access</button>
+                <p style="font-size: 0.7rem; color: #555; margin-bottom: 10px;">ВЫДАТЬ АДМИНКУ (НИК)</p>
+                <input type="text" id="target-nick" placeholder="Username" style="font-size: 0.8rem; padding: 15px;">
+                <button class="btn-main" style="background: #FF4B4B;" onclick="grantAdmin()">Выдать права</button>
             </div>
         </div>
 
-        <button class="btn-main" style="background: transparent; border: 1px solid #FF4B4B; color: #FF4B4B; margin-top: 60px;" onclick="logout()">Terminate Session</button>
-        <button class="btn-main" style="background: var(--glass); margin-top: 15px;" onclick="toggleSidebar()">Close Menu</button>
+        <button class="btn-main" style="background: transparent; border: 1px solid #FF4B4B; color: #FF4B4B; margin-top: 60px;" onclick="logout()">Завершить сеанс</button>
+        <button class="btn-main" style="background: var(--glass); margin-top: 15px;" onclick="toggleSidebar()">Закрыть меню</button>
     </div>
 
     <script>
@@ -168,7 +166,7 @@
             theme: localStorage.getItem('z_theme') || 'snow'
         };
 
-        // Живой поиск при вводе ника
+        // Живой поиск ника
         document.getElementById('login-user').addEventListener('input', (e) => {
             const nick = e.target.value.trim();
             const whitelist = JSON.parse(localStorage.getItem('z_whitelist') || '[]');
@@ -188,16 +186,16 @@
 
             if(nick.toLowerCase() === OWNER) {
                 if(passIn === OWNER_P) save(nick, true);
-                else alert("System Key Error");
+                else alert("Неверный пароль владельца");
             } 
             else if(whitelist.includes(nick)) {
                 const savedP = localStorage.getItem('z_pass_' + nick);
                 if(!savedP) {
                     if(setupP.length > 3) { localStorage.setItem('z_pass_' + nick, setupP); save(nick, true); }
-                    else alert("Min 4 symbols");
+                    else alert("Пароль от 4 символов");
                 } else {
                     if(passIn === savedP) save(nick, true);
-                    else alert("Wrong Admin Key");
+                    else alert("Неверный пароль");
                 }
             } else if(nick.length > 1) save(nick, false);
         }
@@ -215,7 +213,7 @@
             if(!list.includes(n)) {
                 list.push(n);
                 localStorage.setItem('z_whitelist', JSON.stringify(list));
-                alert("Permission granted to " + n);
+                alert("Админка для " + n + " выдана!");
             }
         }
 
@@ -229,7 +227,7 @@
 
             if(state.isAdmin || state.user.toLowerCase() === OWNER) {
                 document.getElementById('admin-hub').classList.remove('hidden');
-                document.getElementById('menu-role').innerText = "Administrator Status";
+                document.getElementById('menu-role').innerText = "Administrator Access";
                 document.getElementById('menu-role').style.color = "#FF4B4B";
             }
             if(state.user.toLowerCase() === OWNER) document.getElementById('owner-only').classList.remove('hidden');
@@ -245,7 +243,7 @@
             p.classList.add('snowflake');
             let size = Math.random() * 3 + 1;
             p.style.width = size + 'px'; p.style.height = size + 'px';
-            p.style.background = state.theme === 'matrix' ? "#00FF41" : "rgba(255,255,255,0.5)";
+            p.style.background = state.theme === 'matrix' ? "#00FF41" : "rgba(255,255,255,0.4)";
             p.style.left = Math.random() * window.innerWidth + 'px';
             p.style.top = '-10px';
             c.appendChild(p);
