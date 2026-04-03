@@ -3,179 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zlimb Cloud OS</title>
+    <title>Zlimb Launcher Pro</title>
     <style>
         @import url('https://googleapis.com');
-        :root { --accent: #7B61FF; --bg: #0b0d14; --glass: rgba(255, 255, 255, 0.03); }
-        body { margin: 0; background: var(--bg); color: white; font-family: 'Inter', sans-serif; overflow: hidden; height: 100vh; display: flex; justify-content: center; align-items: center; }
-        #particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+        :root { --accent: #7B61FF; --bg: #0b0d14; --card-bg: rgba(255, 255, 255, 0.03); }
         
-        /* Кнопка в углу */
-        #profile-btn {
+        body { margin: 0; background: var(--bg); color: white; font-family: 'Inter', sans-serif; overflow: hidden; height: 100vh; display: flex; justify-content: center; align-items: center; }
+        #particles-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+
+        /* Кнопка Профиля в углу */
+        #profile-trigger {
             position: fixed; top: 20px; right: 20px; z-index: 100;
-            background: var(--glass); backdrop-filter: blur(10px);
+            background: var(--card-bg); backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px;
-            padding: 8px 16px; cursor: pointer; display: flex; align-items: center; gap: 10px;
+            padding: 10px 18px; cursor: pointer; display: flex; align-items: center; gap: 10px;
             transition: 0.3s; border-bottom: 2px solid var(--accent);
         }
-        #profile-btn:hover { background: rgba(255, 255, 255, 0.08); transform: translateY(-2px); }
+        #profile-trigger:hover { background: rgba(255, 255, 255, 0.1); transform: scale(1.05); }
 
         .card { 
-            background: var(--glass); backdrop-filter: blur(25px); 
+            background: var(--card-bg); backdrop-filter: blur(25px); 
             border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 30px; 
             padding: 40px; text-align: center; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7); 
             z-index: 10; width: 380px; position: relative;
         }
-        
+
+        /* Выпадающее меню профиля */
+        #side-menu {
+            position: fixed; top: 80px; right: 20px; width: 300px;
+            background: rgba(15, 17, 26, 0.95); backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 20px;
+            padding: 25px; z-index: 99; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: translateX(400px); box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+        }
+        #side-menu.active { transform: translateX(0); }
+
         h1 { font-size: 2rem; margin: 0 0 20px; background: linear-gradient(45deg, var(--accent), #00A2FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; }
-        input { width: 100%; padding: 14px; margin-bottom: 10px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; outline: none; box-sizing: border-box; }
+        input { width: 100%; padding: 14px; margin-bottom: 12px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; outline: none; box-sizing: border-box; font-size: 0.9rem; }
         
-        .btn { width: 100%; background: var(--accent); color: white; border: none; padding: 14px; border-radius: 12px; font-weight: bold; cursor: pointer; transition: 0.3s; display: block; margin-top: 10px; text-decoration: none; }
-        .btn:hover { filter: brightness(1.2); transform: scale(1.02); }
-        .btn-sec { background: transparent; border: 1px solid rgba(255,255,255,0.2); }
-        .btn-danger { background: #FF4B4B; }
+        .btn { width: 100%; background: var(--accent); color: white; border: none; padding: 14px; border-radius: 12px; font-weight: bold; cursor: pointer; transition: 0.3s; display: block; margin-top: 10px; text-decoration: none; font-size: 1rem; }
+        .btn:hover { filter: brightness(1.2); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(123, 97, 255, 0.3); }
+        .btn-outline { background: transparent; border: 1px solid rgba(255,255,255,0.15); font-size: 0.8rem; }
+        .btn-admin { background: #FF4B4B; }
         
         .hidden { display: none; }
-        .status-badge { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; padding: 3px 8px; border-radius: 6px; background: rgba(255,255,255,0.1); margin-bottom: 10px; display: inline-block; }
-        .particle { position: absolute; background: white; border-radius: 50%; pointer-events: none; }
+        .snowflake { position: absolute; background: white; border-radius: 50%; pointer-events: none; }
     </style>
 </head>
 <body>
-    <div id="particles"></div>
+    <div id="particles-bg"></div>
 
-    <!-- КНОПКА ПРОФИЛЯ -->
-    <div id="profile-btn" class="hidden" onclick="showScreen('profile')">
-        <span id="nav-user">User</span>
-        <img src="https://flaticon.com" width="20" style="filter: invert(1);">
+    <!-- КНОПКА ПРОФИЛЬ -->
+    <div id="profile-trigger" class="hidden" onclick="toggleMenu()">
+        <span id="nav-username">User</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
     </div>
 
-    <!-- 1. ВХОД -->
-    <div class="card" id="screen-login">
+    <!-- ВХОД -->
+    <div class="card" id="screen-auth">
         <h1>Zlimb Login</h1>
-        <input type="text" id="in-user" placeholder="Ваш никнейм">
-        <button class="btn" onclick="login()">ВХОД</button>
+        <input type="text" id="login-user" placeholder="Ваш никнейм">
+        <div id="pass-field" class="hidden">
+            <input type="password" id="login-pass" placeholder="Пароль администратора">
+        </div>
+        <button class="btn" onclick="handleAuth()">ПРОДОЛЖИТЬ</button>
     </div>
 
-    <!-- 2. ГЛАВНОЕ ОКНО -->
-    <div class="card hidden" id="screen-main">
+    <!-- ГЛАВНАЯ (ЛАУНЧЕР) -->
+    <div class="card hidden" id="screen-launcher">
         <h1>Zlimb OS</h1>
-        <p style="color: #8F93A3; margin-bottom: 25px;">Добро пожаловать в систему.</p>
+        <p style="color: #8F93A3; margin-bottom: 25px;">Система готова к загрузке.</p>
         <a href="https://yandex.ru" target="_blank" class="btn">СКАЧАТЬ ЛАУНЧЕР</a>
-        <button class="btn btn-sec" style="margin-top:20px" onclick="showScreen('profile')">МОЙ ПРОФИЛЬ</button>
     </div>
 
-    <!-- 3. ПРОФИЛЬ -->
-    <div class="card hidden" id="screen-profile">
-        <div class="status-badge" id="prof-status">USER</div>
-        <h1 id="prof-name">Username</h1>
+    <!-- МЕНЮ ПРОФИЛЯ -->
+    <div id="side-menu">
+        <h2 id="menu-name" style="margin-top:0">Username</h2>
+        <p id="menu-status" style="font-size:0.7rem; color: #7B61FF; letter-spacing:1px; margin-bottom:20px">USER STATUS</p>
         
-        <div id="admin-area" class="hidden">
-            <button class="btn btn-danger" onclick="showScreen('admin')">АДМИН-ПАНЕЛЬ</button>
+        <!-- БЛОК АДМИНА -->
+        <div id="admin-panel" class="hidden">
+            <p style="color: #FF4B4B; font-size: 0.8rem; font-weight: bold; border-top: 1px solid #222; padding-top: 15px;">АДМИН-ПАНЕЛЬ</p>
+            <button class="btn btn-outline" onclick="setTheme('snow')">❄️ Эффект: Снег</button>
+            <button class="btn btn-outline" onclick="setTheme('matrix')">📟 Эффект: Матрица</button>
+            <button class="btn btn-outline" onclick="setTheme('fire')">🔥 Эффект: Огонь</button>
+            
+            <p style="color: #555; font-size: 0.7rem; margin-top:15px">ВЫДАЧА АДМИНКИ (КЛЮЧ)</p>
+            <input type="text" id="new-key" placeholder="Придумайте ключ" style="font-size:0.8rem">
+            <button class="btn btn-outline" style="border-color:#FF4B4B" onclick="createKey()">СОЗДАТЬ</button>
         </div>
 
-        <div id="user-area">
-            <p style="font-size: 0.8rem; color: #555;">Есть ключ админа?</p>
-            <input type="text" id="admin-key" placeholder="Введите ключ">
-            <button class="btn btn-sec" onclick="activateKey()">АКТИВИРОВАТЬ</button>
+        <!-- БЛОК ОБЫЧНОГО ЮЗЕРА -->
+        <div id="user-activation">
+            <p style="color: #555; font-size: 0.7rem; margin-top:15px">АКТИВАЦИЯ АДМИНКИ</p>
+            <input type="text" id="use-key" placeholder="Введите ключ">
+            <button class="btn btn-outline" onclick="activateAdmin()">АКТИВИРОВАТЬ</button>
         </div>
 
-        <button class="btn btn-sec" style="margin-top: 20px" onclick="logout()">ВЫЙТИ</button>
-        <button class="btn" onclick="showScreen('main')">НАЗАД</button>
-    </div>
-
-    <!-- 4. АДМИНКА -->
-    <div class="card hidden" id="screen-admin">
-        <h1>Admin Tool</h1>
-        <p style="color: #8F93A3; font-size: 0.9rem;">Настройка системы</p>
-        
-        <button class="btn btn-sec" onclick="changeTheme('snow')">ТЕМА: СНЕГ</button>
-        <button class="btn btn-sec" onclick="changeTheme('matrix')">ТЕМА: МАТРИЦА</button>
-        
-        <div id="super-admin-tools" class="hidden">
-            <hr style="border: 0; border-top: 1px solid #333; margin: 20px 0;">
-            <p style="color: #FF4B4B; font-size: 0.8rem;">ВЫДАЧА ПРАВ (ДЛЯ ВЛАДЕЛЬЦА)</p>
-            <input type="text" id="new-key" placeholder="Придумайте ключ">
-            <button class="btn" onclick="generateKey()">СОЗДАТЬ КЛЮЧ</button>
-            <p id="key-result" style="font-size: 0.7rem; color: #2ECC71; margin-top: 5px;"></p>
-        </div>
-
-        <button class="btn" style="margin-top: 20px;" onclick="showScreen('profile')">В ПРОФИЛЬ</button>
+        <button class="btn btn-logout" style="background:#222; margin-top:30px" onclick="logout()">ВЫЙТИ</button>
     </div>
 
     <script>
-        const OWNER = 'zl1mbyys';
+        const OWNER_NAME = 'zl1mbyys';
+        const OWNER_PASS = 'Tema10052014!';
+        
         let state = {
             user: localStorage.getItem('z_user'),
-            isAdmin: localStorage.getItem('z_is_admin') === 'true',
+            isAdmin: localStorage.getItem('z_admin') === 'true',
             theme: localStorage.getItem('z_theme') || 'snow'
         };
 
-        function login() {
-            const val = document.getElementById('in-user').value.trim();
-            if(!val) return;
-            state.user = val;
-            localStorage.setItem('z_user', val);
-            init();
+        // Слежение за вводом ника для показа поля пароля
+        document.getElementById('login-user').addEventListener('input', (e) => {
+            if(e.target.value.toLowerCase() === OWNER_NAME) {
+                document.getElementById('pass-field').classList.remove('hidden');
+            } else {
+                document.getElementById('pass-field').classList.add('hidden');
+            }
+        });
+
+        function handleAuth() {
+            const user = document.getElementById('login-user').value.trim();
+            const pass = document.getElementById('login-pass').value;
+
+            if(user.toLowerCase() === OWNER_NAME) {
+                if(pass === OWNER_PASS) {
+                    saveLogin(user, true);
+                } else {
+                    alert("Неверный пароль владельца!");
+                }
+            } else if(user.length > 2) {
+                saveLogin(user, false);
+            }
+        }
+
+        function saveLogin(user, admin) {
+            localStorage.setItem('z_user', user);
+            localStorage.setItem('z_admin', admin);
+            location.reload();
         }
 
         function init() {
             if(!state.user) return;
-            
-            document.querySelectorAll('.card').forEach(c => c.classList.add('hidden'));
-            document.getElementById('screen-main').classList.remove('hidden');
-            document.getElementById('profile-btn').classList.remove('hidden');
-            document.getElementById('nav-user').innerText = state.user;
-            
-            // Настройка профиля
-            document.getElementById('prof-name').innerText = state.user;
-            const isAdm = (state.user.toLowerCase() === OWNER || state.isAdmin);
-            
-            if(isAdm) {
-                document.getElementById('admin-area').classList.remove('hidden');
-                document.getElementById('prof-status').innerText = "ADMINISTRATOR";
-                document.getElementById('prof-status').style.color = "#FF4B4B";
-                document.getElementById('user-area').classList.add('hidden');
-            }
+            document.getElementById('screen-auth').classList.add('hidden');
+            document.getElementById('screen-launcher').classList.remove('hidden');
+            document.getElementById('profile-trigger').classList.remove('hidden');
+            document.getElementById('nav-username').innerText = state.user;
+            document.getElementById('menu-name').innerText = state.user;
 
-            if(state.user.toLowerCase() === OWNER) {
-                document.getElementById('super-admin-tools').classList.remove('hidden');
-                document.getElementById('prof-status').innerText = "OWNER / DEV";
+            if(state.isAdmin || state.user.toLowerCase() === OWNER_NAME) {
+                document.getElementById('admin-panel').classList.remove('hidden');
+                document.getElementById('user-activation').classList.add('hidden');
+                document.getElementById('menu-status').innerText = "ADMINISTRATOR";
+                document.getElementById('menu-status').style.color = "#FF4B4B";
             }
         }
 
-        function showScreen(name) {
-            document.querySelectorAll('.card').forEach(c => c.classList.add('hidden'));
-            document.getElementById('screen-' + name).classList.remove('hidden');
+        function toggleMenu() {
+            document.getElementById('side-menu').classList.toggle('active');
         }
 
-        function generateKey() {
-            const key = document.getElementById('new-key').value;
-            if(!key) return;
-            // Сохраняем "допустимый" ключ в localStorage (имитация базы)
+        function setTheme(t) {
+            localStorage.setItem('z_theme', t);
+            location.reload();
+        }
+
+        function createKey() {
+            const k = document.getElementById('new-key').value;
+            if(!k) return;
             let keys = JSON.parse(localStorage.getItem('z_keys') || '[]');
-            keys.push(key);
+            keys.push(k);
             localStorage.setItem('z_keys', JSON.stringify(keys));
-            document.getElementById('key-result').innerText = "Ключ создан: " + key;
+            alert("Ключ " + k + " создан!");
         }
 
-        function activateKey() {
-            const input = document.getElementById('admin-key').value;
+        function activateAdmin() {
+            const k = document.getElementById('use-key').value;
             let keys = JSON.parse(localStorage.getItem('z_keys') || '[]');
-            
-            // Проверка (можно добавить хардкод ключи сюда)
-            if(keys.includes(input) || input === "zl1mb_dev_2026") {
-                state.isAdmin = true;
-                localStorage.setItem('z_is_admin', 'true');
-                alert("Доступ администратора получен!");
+            if(keys.includes(k)) {
+                localStorage.setItem('z_admin', 'true');
+                alert("Админ-права получены!");
                 location.reload();
             } else {
                 alert("Неверный ключ!");
             }
-        }
-
-        function changeTheme(t) {
-            localStorage.setItem('z_theme', t);
-            location.reload();
         }
 
         function logout() {
@@ -185,20 +196,25 @@
 
         // Анимация частиц
         function spawn() {
-            const cont = document.getElementById('particles');
+            const cont = document.getElementById('particles-bg');
             const p = document.createElement('div');
-            p.classList.add('particle');
+            p.classList.add('snowflake');
             let size = Math.random() * 4 + 2;
             p.style.width = size + 'px'; p.style.height = size + 'px';
-            p.style.background = state.theme === 'matrix' ? "#00FF41" : "white";
+            
+            if(state.theme === 'matrix') p.style.background = "#00FF41";
+            else if(state.theme === 'fire') p.style.background = "orange";
+            else p.style.background = "white";
+
             p.style.left = Math.random() * window.innerWidth + 'px';
             p.style.top = '-10px';
             cont.appendChild(p);
             p.animate([{ transform: 'translateY(0)' }, { transform: `translateY(${window.innerHeight + 20}px)` }], 
             { duration: Math.random() * 3000 + 2000 }).onfinish = () => p.remove();
         }
+        
         setInterval(spawn, 100);
-        if(state.user) init();
+        init();
     </script>
 </body>
 </html>
