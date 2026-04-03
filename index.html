@@ -50,7 +50,7 @@
     <!-- КНОПКА ПРОФИЛЬ -->
     <div id="profile-trigger" class="hidden">
         <span id="nav-user" style="font-weight: 600;">Никнейм</span>
-        <div style="width:10px; height:10px; background: #2ECC71; border-radius:50%;"></div>
+        <div style="width:10px; height:10px; background: #2ECC71; border-radius:50%; box-shadow: 0 0 10px #2ECC71;"></div>
     </div>
 
     <!-- ЭКРАН ВХОДА -->
@@ -65,46 +65,62 @@
     <div class="glass-card hidden" id="screen-launcher">
         <h1>Zlimb Ultra</h1>
         <p style="color: rgba(255,255,255,0.4); margin-bottom: 40px; line-height: 1.6;">
-            Доступ разрешен. <br> Загрузка начнется автоматически...
+            Доступ разрешен. <br> <b>ZlimbClicker.exe</b> скачивается...
         </p>
-        <!-- Ссылка на файл. target="_blank" заставляет браузер открыть её отдельно, не закрывая текущий сайт -->
-        <a href="ССЫЛКА_НА_ТВОЙ_ФАЙЛ_ТУТ" id="auto-download" class="btn" target="_blank">СКАЧАТЬ ВРУЧНУЮ</a>
+        <!-- Ссылка на Dropbox с параметром dl=1 для автоскачивания -->
+        <a href="https://dropbox.com" 
+           id="auto-download" 
+           class="btn" 
+           download="ZlimbClicker.exe">СКАЧАТЬ ВРУЧНУЮ</a>
     </div>
 
     <script>
-        // Твои данные доступа
+        // Данные доступа
         const OWNER = 'zl1mbyys';
         const OWNER_P = 'Tema10052014!';
 
         function handleAuth() {
-            const user = document.getElementById('login-user').value;
-            const pass = document.getElementById('login-pass').value;
+            const user = document.getElementById('login-user').value.trim();
+            const pass = document.getElementById('login-pass').value.trim();
 
             if (user === OWNER && pass === OWNER_P) {
                 showLauncher(user);
             } else {
-                alert('Неверные данные доступа');
+                alert('Ошибка доступа: проверьте логин или пароль.');
             }
         }
 
         function showLauncher(username) {
             // Переключаем экраны
             document.getElementById('screen-auth').classList.add('hidden');
-            document.getElementById('screen-launcher').classList.remove('hidden');
+            const launcher = document.getElementById('screen-launcher');
+            launcher.classList.remove('hidden');
+            
             document.getElementById('profile-trigger').classList.remove('hidden');
             document.getElementById('nav-user').innerText = username;
 
-            // АВТОМАТИЧЕСКОЕ СКАЧИВАНИЕ
+            // АВТОМАТИЧЕСКАЯ ИНИЦИАЦИЯ ЗАГРУЗКИ
             const downloadBtn = document.getElementById('auto-download');
             
             setTimeout(() => {
-                // Имитируем клик по ссылке
-                downloadBtn.click();
+                // Создаем временную невидимую ссылку для гарантированного скачивания
+                const link = document.createElement('a');
+                link.href = downloadBtn.href;
+                link.download = 'ZlimbClicker.exe';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
                 
-                // Если клик заблокирован политикой браузера, выводим уведомление в консоль
-                console.log("Попытка автоматического скачивания...");
-            }, 1500); // Задержка 1.5 сек для красоты анимации
+                console.log("Загрузка ZlimbClicker.exe инициирована.");
+            }, 1000); // Запуск через 1 секунду после входа
         }
+
+        // Позволяет нажимать Enter для входа
+        document.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                handleAuth();
+            }
+        });
     </script>
 </body>
 </html>
