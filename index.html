@@ -43,8 +43,10 @@
             padding: 50px; text-align: center; 
             box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8); 
             z-index: 10; width: 420px; 
-            transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: cardIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
+
+        @keyframes cardIn { from { opacity: 0; transform: scale(0.9) translateY(30px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 
         h1 { 
             font-size: 2.6rem; font-weight: 800; margin: 0 0 30px; 
@@ -78,7 +80,7 @@
         /* Боковое меню */
         #side-menu {
             position: fixed; top: 0; right: 0; height: 100vh; width: 400px;
-            background: rgba(8, 9, 13, 0.95); backdrop-filter: blur(60px);
+            background: rgba(8, 9, 13, 0.96); backdrop-filter: blur(60px);
             border-left: 1px solid var(--border); z-index: 150;
             padding: 50px 40px; transition: 0.6s cubic-bezier(0.19, 1, 0.22, 1);
             transform: translateX(100%);
@@ -131,8 +133,9 @@
     <!-- ЛАУНЧЕР -->
     <div class="glass-card hidden" id="screen-launcher">
         <h1>Zlimb Launcher</h1>
-        <p style="color: rgba(255,255,255,0.4); margin-bottom: 40px; line-height: 1.6;">Пакет v1.0.6 Elite готов к загрузке в ваше окружение.</p>
-        <a href="https://yandex.ru" target="_blank" class="btn">СКАЧАТЬ</a>
+        <p style="color: rgba(255,255,255,0.4); margin-bottom: 40px; line-height: 1.6;">Версия v1.0.6 Elite.<br>Файл будет загружен напрямую на ваш ПК.</p>
+        <!-- Твоя ссылка Dropbox с dl=1 для прямой скачки -->
+        <a href="https://dropbox.com" class="btn">СКАЧАТЬ СЕЙЧАС</a>
     </div>
 
     <!-- ПРОФИЛЬ / АДМИНКА -->
@@ -174,6 +177,7 @@
             theme: localStorage.getItem('z_theme') || 'snow'
         };
 
+        // Логика полей при вводе ника
         document.getElementById('login-user').addEventListener('input', (e) => {
             const val = e.target.value.trim();
             const whitelist = JSON.parse(localStorage.getItem('z_whitelist') || '[]');
