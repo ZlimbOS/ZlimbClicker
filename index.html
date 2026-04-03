@@ -18,13 +18,9 @@
         body { margin: 0; background: var(--bg); color: white; font-family: 'Plus Jakarta Sans', sans-serif; overflow: hidden; height: 100vh; display: flex; justify-content: center; align-items: center; }
         canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
 
-        /* Таймер */
         #session-timer { position: fixed; top: 30px; left: 30px; z-index: 999; background: var(--glass); border: 1px solid var(--border); padding: 12px 20px; border-radius: 18px; backdrop-filter: blur(20px); font-family: monospace; color: var(--accent); display: none; }
-        
-        /* Кнопка Профиля */
         #profile-trigger { position: fixed; top: 30px; right: 30px; z-index: 999; background: var(--glass); border: 1px solid var(--border); border-radius: 22px; padding: 10px 24px; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: 0.3s; }
 
-        /* Карточки */
         .glass-card { background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border); border-radius: 40px; padding: 50px; text-align: center; width: 420px; z-index: 100; box-shadow: 0 0 50px #000; }
         h1 { font-size: 2.5rem; font-weight: 800; margin: 0 0 30px; }
         
@@ -33,7 +29,6 @@
         .btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
         .btn-sec { background: transparent; border: 1px solid var(--border); margin-top: 10px; color: #555; font-size: 0.8rem; }
 
-        /* БОКОВАЯ ПАНЕЛЬ (МЕНЮ) */
         #side-menu { 
             position: fixed; top: 0; right: 0; height: 100vh; width: 420px; 
             background: #080808; border-left: 1px solid var(--border); 
@@ -49,9 +44,9 @@
     <canvas id="bg-canvas"></canvas>
     <div id="session-timer">ОСТАЛОСЬ: <span id="time-val">24:00:00</span></div>
 
-    <!-- ПРОФИЛЬ -->
+    <!-- КНОПКА ПРОФИЛЯ -->
     <div id="profile-trigger" class="hidden" onclick="toggleMenu()">
-        <span id="nav-user">User</span>
+        <span id="nav-user">Username</span>
         <div style="width:10px; height:10px; background: #2ECC71; border-radius:50%; box-shadow: 0 0 10px #2ECC71;"></div>
     </div>
 
@@ -67,9 +62,9 @@
     <!-- РЕГИСТРАЦИЯ -->
     <div class="glass-card hidden" id="screen-reg">
         <h1>Регистрация</h1>
-        <input type="text" id="reg-user" placeholder="Логин">
-        <input type="password" id="reg-pass" placeholder="Пароль">
-        <button class="btn" onclick="handleReg()">СОЗДАТЬ</button>
+        <input type="text" id="reg-user" placeholder="Придумайте Логин">
+        <input type="password" id="reg-pass" placeholder="Придумайте Пароль">
+        <button class="btn" onclick="handleReg()">СОЗДАТЬ АККАУНТ</button>
         <button class="btn btn-sec" onclick="switchForm('auth')">НАЗАД</button>
     </div>
 
@@ -92,7 +87,7 @@
             <button class="btn" style="width: auto; padding: 10px 20px; background: var(--glass); border: 1px solid var(--border);" onclick="toggleMenu()">ЗАКРЫТЬ</button>
         </div>
 
-        <button class="btn" style="background:rgba(255,0,0,0.1); color:var(--danger); border: 1px solid rgba(255,0,0,0.1); margin-top:40px;" onclick="logout()">ВЫЙТИ</button>
+        <button class="btn" style="background:rgba(255,0,0,0.1); color:var(--danger); border: 1px solid rgba(255,0,0,0.1); margin-top:40px;" onclick="logout()">ВЫЙТИ ИЗ АККАУНТА</button>
     </div>
 
     <script>
@@ -107,7 +102,7 @@
             if(db[u] || u === OWNER) return alert('Ник занят!');
             db[u] = { pass: p, role: 'USER', time: Date.now() + 86400000 };
             localStorage.setItem('z_db', JSON.stringify(db));
-            alert('Аккаунт создан!'); switchForm('auth');
+            alert('Готово! Войдите.'); switchForm('auth');
         }
 
         function handleAuth() {
