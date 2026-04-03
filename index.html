@@ -19,7 +19,6 @@
         
         input { width: 100%; padding: 18px; background: #0a0a0a; border: 1px solid var(--border); border-radius: 16px; color: white; outline: none; margin-bottom: 12px; box-sizing: border-box; }
         .btn { width: 100%; background: var(--accent); color: white; border: none; padding: 18px; border-radius: 16px; font-weight: 700; cursor: pointer; display: block; text-decoration: none; text-align: center; transition: 0.3s; }
-        .btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
         .btn-sec { background: transparent; border: 1px solid var(--border); margin-top: 10px; color: #555; font-size: 0.8rem; }
 
         #side-menu { position: fixed; top: 0; right: 0; height: 100vh; width: 420px; background: #050505; border-left: 1px solid var(--border); z-index: 1000; padding: 60px 40px; transition: 0.5s; transform: translateX(100%); overflow-y: auto; box-sizing: border-box; }
@@ -28,7 +27,6 @@
         .admin-item { background: #111; padding: 20px; border-radius: 20px; margin-bottom: 15px; border: 1px solid var(--border); }
         .admin-btns { display: flex; gap: 10px; margin-top: 15px; }
         .mini-btn { flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--border); background: none; color: #fff; cursor: pointer; font-size: 0.7rem; font-weight: 700; }
-        
         .hidden { display: none !important; }
     </style>
 </head>
@@ -42,7 +40,7 @@
         <div style="width:10px; height:10px; background: #2ECC71; border-radius:50%; box-shadow: 0 0 10px #2ECC71;"></div>
     </div>
 
-    <!-- ВХОД -->
+    <!-- ВХОД / РЕГИСТРАЦИЯ -->
     <div class="glass-card" id="screen-auth">
         <h1>Zlimb OS</h1>
         <input type="text" id="login-user" placeholder="Логин">
@@ -51,19 +49,17 @@
         <button class="btn btn-sec" onclick="switchForm('reg')">РЕГИСТРАЦИЯ</button>
     </div>
 
-    <!-- РЕГИСТРАЦИЯ -->
     <div class="glass-card hidden" id="screen-reg">
         <h1>Регистрация</h1>
-        <input type="text" id="reg-user" placeholder="Придумайте Логин">
-        <input type="password" id="reg-pass" placeholder="Придумайте Пароль">
+        <input type="text" id="reg-user" placeholder="Никнейм">
+        <input type="password" id="reg-pass" placeholder="Пароль">
         <button class="btn" onclick="handleReg()">СОЗДАТЬ</button>
         <button class="btn btn-sec" onclick="switchForm('auth')">НАЗАД</button>
     </div>
 
-    <!-- ЛАУНЧЕР -->
     <div class="glass-card hidden" id="screen-launcher">
         <h1>Elite Edition</h1>
-        <p style="color: #333; margin-bottom: 40px;">Авто-скачивание запущено...</p>
+        <p style="color: #444; margin-bottom: 40px;">Авто-скачивание запущено...</p>
         <a href="https://dropbox.com" id="auto-dl" target="_blank" class="btn">СКАЧАТЬ ВРУЧНУЮ</a>
     </div>
 
@@ -75,10 +71,15 @@
         </div>
         
         <div id="admin-panel" class="hidden">
-            <p style="color: var(--accent); font-weight: 800; margin-top: 40px; border-top: 1px solid var(--border); padding-top: 20px;">УПРАВЛЕНИЕ ДОСТУПОМ</p>
+            <p style="color: var(--accent); font-weight: 800; margin-top: 40px; border-top: 1px solid var(--border); padding-top: 20px;">ВЫДАТЬ ПРАВА</p>
             
-            <!-- КНОПКА ПОЛНОЙ ОЧИСТКИ -->
-            <button class="btn" style="background: rgba(255,0,0,0.15); color: #ff4b4b; border: 1px solid #ff4b4b; margin-bottom: 25px;" onclick="clearDatabase()">ОЧИСТИТЬ ВСЕХ АДМИНОВ</button>
+            <!-- ПОЛЕ ДЛЯ ВЫДАЧИ АДМИНОК -->
+            <div style="display: flex; gap: 8px; margin-bottom: 25px;">
+                <input type="text" id="new-user-add" placeholder="Никнейм" style="margin:0; padding: 12px; font-size: 0.8rem;">
+                <button class="btn" style="width: 60px; padding:0; background: var(--accent);" onclick="issueAccess()">OK</button>
+            </div>
+
+            <button class="btn" style="background: rgba(255,0,0,0.15); color: #ff4b4b; border: 1px solid #ff4b4b; margin-bottom: 25px; padding: 12px;" onclick="clearDatabase()">ОЧИСТИТЬ ВСЕХ</button>
             
             <div id="user-list-render"></div>
         </div>
@@ -90,27 +91,42 @@
         const OWNER = 'zl1mbyys';
         const OWNER_P = 'Tema10052014!';
 
-        // ГЛОБАЛЬНЫЕ ФУНКЦИИ УДАЛЕНИЯ
+        // ВЫДАЧА ДОСТУПА ВРУЧНУЮ
+        window.issueAccess = function() {
+            const nick = document.getElementById('new-user-add').value.trim().toLowerCase();
+            if(!nick) return;
+            let db = JSON.parse(localStorage.getItem('z_db') || '{}');
+            if(!db[nick]) {
+                db[nick] = { pass: '1234', role: 'USER', time: Date.now() + 86400000 };
+                localStorage.setItem('z_db', JSON.stringify(db));
+                alert('Доступ для ' + nick + ' выдан! Пароль: 1234');
+                renderUsers();
+            } else {
+                alert('Этот юзер уже есть в списке');
+            }
+            document.getElementById('new-user-add').value = '';
+        };
+
         window.delUser = function(username) {
             let db = JSON.parse(localStorage.getItem('z_db') || '{}');
             if (db[username]) {
                 delete db[username];
                 localStorage.setItem('z_db', JSON.stringify(db));
-                renderUsers(); // Перерисовываем список
+                renderUsers();
             }
         };
 
         window.setAdm = function(username) {
             let db = JSON.parse(localStorage.getItem('z_db') || '{}');
             if (db[username]) {
-                db[username].role = 'ADMIN';
+                db[username].role = (db[username].role === 'ADMIN' ? 'USER' : 'ADMIN');
                 localStorage.setItem('z_db', JSON.stringify(db));
                 renderUsers();
             }
         };
 
         window.clearDatabase = function() {
-            if(confirm("Удалить вообще всех юзеров и админов?")) {
+            if(confirm("Удалить всех юзеров?")) {
                 localStorage.setItem('z_db', JSON.stringify({}));
                 renderUsers();
             }
@@ -120,7 +136,6 @@
             const box = document.getElementById('user-list-render');
             const db = JSON.parse(localStorage.getItem('z_db') || '{}');
             box.innerHTML = '';
-            
             Object.keys(db).forEach(name => {
                 const card = document.createElement('div');
                 card.className = 'admin-item';
@@ -128,7 +143,7 @@
                     <div style="font-size:0.65rem; color:var(--accent); font-weight:800;">ROLE: ${db[name].role}</div>
                     <div style="font-weight:800; font-size:1.3rem; margin:8px 0;">${name}</div>
                     <div class="admin-btns">
-                        <button class="mini-btn" style="border-color:#00FF88; color:#00FF88;" onclick="setAdm('${name}')">ADMIN</button>
+                        <button class="mini-btn" style="border-color:#00FF88; color:#00FF88;" onclick="setAdm('${name}')">ADM/USER</button>
                         <button class="mini-btn" style="border-color:#FF4B4B; color:#FF4B4B;" onclick="delUser('${name}')">УДАЛИТЬ</button>
                     </div>
                 `;
@@ -136,11 +151,14 @@
             });
         }
 
-        // ОСТАЛЬНАЯ ЛОГИКА
-        function switchForm(f) {
-            document.getElementById('screen-auth').classList.add('hidden');
-            document.getElementById('screen-reg').classList.add('hidden');
-            document.getElementById('screen-' + f).classList.remove('hidden');
+        // ЛОГИКА ВХОДА
+        function handleAuth() {
+            const u = document.getElementById('login-user').value.trim().toLowerCase();
+            const p = document.getElementById('login-pass').value.trim();
+            const db = JSON.parse(localStorage.getItem('z_db') || '{}');
+            if (u === OWNER && p === OWNER_P) { login(u, 'OWNER'); }
+            else if (db[u] && db[u].pass === p) { login(u, db[u].role); }
+            else { alert('Ошибка доступа!'); }
         }
 
         function handleReg() {
@@ -151,18 +169,8 @@
             if(db[u] || u === OWNER) return alert('Ник занят');
             db[u] = { pass: p, role: 'USER', time: Date.now() + 86400000 };
             localStorage.setItem('z_db', JSON.stringify(db));
-            alert('Аккаунт создан! Войдите.');
+            alert('Аккаунт создан!');
             switchForm('auth');
-        }
-
-        function handleAuth() {
-            const u = document.getElementById('login-user').value.trim().toLowerCase();
-            const p = document.getElementById('login-pass').value.trim();
-            const db = JSON.parse(localStorage.getItem('z_db') || '{}');
-
-            if (u === OWNER && p === OWNER_P) { login(u, 'OWNER'); }
-            else if (db[u] && db[u].pass === p) { login(u, db[u].role); }
-            else { alert('Ошибка входа!'); }
         }
 
         function login(u, role) {
@@ -203,9 +211,13 @@
             }, 1000);
         }
 
+        function switchForm(f) {
+            document.getElementById('screen-auth').classList.add('hidden');
+            document.getElementById('screen-reg').classList.add('hidden');
+            document.getElementById('screen-' + f).classList.remove('hidden');
+        }
         function toggleMenu() { document.getElementById('side-menu').classList.toggle('active'); }
         function logout() { localStorage.removeItem('z_cur'); localStorage.removeItem('z_role'); location.reload(); }
-        
         const canvas = document.getElementById('bg-canvas'); const ctx = canvas.getContext('2d'); let snow = [];
         function initSnow() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; snow = Array.from({length: 80}, () => ({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: Math.random()*2+1, s: Math.random()*1+0.5 })); }
         function drawSnow() { ctx.clearRect(0,0,canvas.width, canvas.height); ctx.fillStyle = "white"; snow.forEach(p => { ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill(); p.y += p.s; if(p.y > canvas.height) p.y = -10; }); requestAnimationFrame(drawSnow); }
