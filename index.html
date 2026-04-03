@@ -3,162 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zlimb Launcher | Авторизация</title>
+    <title>Zlimb Launcher Pro</title>
     <style>
         @import url('https://googleapis.com');
-
-        body {
-            margin: 0;
-            padding: 0;
-            background: radial-gradient(circle at center, #1a1d29 0%, #0b0d14 100%);
-            color: white;
-            font-family: 'Inter', sans-serif;
-            overflow: hidden;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #snow-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        /* Окно авторизации */
-        .auth-card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 28px;
-            padding: 40px;
-            text-align: center;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
-            z-index: 10;
-            width: 350px;
-            transition: all 0.5s ease;
-        }
-
-        h1 {
-            font-size: 2rem;
-            margin-bottom: 25px;
-            background: linear-gradient(45deg, #7B61FF, #00A2FF);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 900;
-        }
-
-        input {
-            width: 100%;
-            padding: 15px;
-            margin-bottom: 15px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            color: white;
-            box-sizing: border-box;
-            outline: none;
-            transition: 0.3s;
-        }
-
-        input:focus {
-            border-color: #7B61FF;
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        .btn {
-            width: 100%;
-            background: #7B61FF;
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 12px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-            text-decoration: none;
-            display: block;
-            margin-top: 10px;
-        }
-
-        .btn:hover {
-            background: #9580FF;
-            box-shadow: 0 0 20px rgba(123, 97, 255, 0.5);
-            transform: translateY(-2px);
-        }
-
+        body { margin: 0; background: #0b0d14; color: white; font-family: 'Inter', sans-serif; overflow: hidden; height: 100vh; display: flex; justify-content: center; align-items: center; }
+        #snow-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+        
+        .card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 28px; padding: 40px; text-align: center; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6); z-index: 10; width: 350px; }
+        h1 { font-size: 2rem; margin-bottom: 20px; background: linear-gradient(45deg, #7B61FF, #00A2FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; }
+        input { width: 100%; padding: 15px; margin-bottom: 10px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; box-sizing: border-box; outline: none; }
+        .btn { width: 100%; background: #7B61FF; color: white; border: none; padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; transition: 0.3s; text-decoration: none; display: block; margin-top: 10px; }
+        .btn:hover { background: #9580FF; transform: translateY(-2px); }
+        .btn-admin { background: #FF4B4B; margin-top: 5px; }
         .hidden { display: none; }
-
-        /* Стиль снежинки */
-        .snowflake {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            opacity: 0.8;
-            pointer-events: none;
-        }
+        .profile-info { text-align: left; margin-top: 15px; font-size: 0.9rem; color: #8F93A3; }
+        .snowflake { position: absolute; background: white; border-radius: 50%; opacity: 0.8; pointer-events: none; }
     </style>
 </head>
 <body>
-
     <div id="snow-container"></div>
 
-    <!-- ФОРМА ВХОДА -->
-    <div class="auth-card" id="login-form">
+    <!-- ВХОД -->
+    <div class="card" id="auth-screen">
         <h1>Zlimb Login</h1>
-        <input type="text" id="username" placeholder="Логин">
-        <input type="password" id="password" placeholder="Пароль">
+        <input type="text" id="username" placeholder="Придумайте ник">
         <button class="btn" onclick="login()">ВОЙТИ</button>
-        <p style="font-size: 0.8rem; color: #555; margin-top: 15px;">Нет аккаунта? Нажмите Войти</p>
     </div>
 
-    <!-- ОКНО СКАЧИВАНИЯ (Скрыто до входа) -->
-    <div class="auth-card hidden" id="download-screen">
-        <h1 id="welcome-text">Привет!</h1>
-        <p style="color: #8F93A3; margin-bottom: 30px;">Твой лаунчер готов к загрузке.</p>
+    <!-- ГЛАВНАЯ СТРАНИЦА -->
+    <div class="card hidden" id="main-screen">
+        <h1 id="welcome-user">Привет!</h1>
+        <div class="profile-info">
+            <p>● Статус: <span id="status" style="color:#2ECC71">User</span></p>
+            <p>● Доступ: <span style="color:white">Разрешен</span></p>
+        </div>
+        <a href="https://yandex.ru" target="_blank" class="btn">СКАЧАТЬ ЛАУНЧЕР</a>
         
-        <a href="https://disk.yandex.ru/d/xUvvDNlmnfo6Kw" target="_blank" class="btn">СКАЧАТЬ ЛАУНЧЕР</a>
-        
-        <p style="font-size: 0.7rem; color: #444; margin-top: 20px;">Версия: 1.0.4 | 2026</p>
+        <button id="admin-btn" class="btn btn-admin hidden" onclick="openAdmin()">АДМИН ПАНЕЛЬ</button>
+        <button class="btn" style="background:#333; margin-top:10px;" onclick="logout()">ВЫЙТИ</button>
+    </div>
+
+    <!-- АДМИНКА -->
+    <div class="card hidden" id="admin-screen">
+        <h1>Admin Panel</h1>
+        <p style="color: #8F93A3;">Управление пользователями</p>
+        <div style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 10px; text-align: left; font-size: 0.8rem;">
+            <p>👥 Всего юзеров: 1</p>
+            <p>✅ Система: Стабильна</p>
+            <p>🛠 Версия: 1.0.4 PRO</p>
+        </div>
+        <button class="btn" onclick="backToMain()">НАЗАД</button>
     </div>
 
     <script>
-        // Логика входа
         function login() {
             const user = document.getElementById('username').value;
-            if(user.length > 2) {
-                document.getElementById('login-form').classList.add('hidden');
-                document.getElementById('download-screen').classList.remove('hidden');
-                document.getElementById('welcome-text').innerText = "Привет, " + user + "!";
-            } else {
-                alert("Введите логин (минимум 3 символа)");
+            if(user.length < 2) return alert("Ник слишком короткий!");
+            
+            localStorage.setItem('zlimb_user', user);
+            showScreen(user);
+        }
+
+        function showScreen(user) {
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('main-screen').classList.remove('hidden');
+            document.getElementById('welcome-user').innerText = "Профиль: " + user;
+
+            // Если зашел админ (ник admin)
+            if(user.toLowerCase() === 'admin') {
+                document.getElementById('admin-btn').classList.remove('hidden');
+                document.getElementById('status').innerText = "Administrator";
+                document.getElementById('status').style.color = "#FF4B4B";
             }
         }
 
-        // Снег (как ты просил)
+        function openAdmin() {
+            document.getElementById('main-screen').classList.add('hidden');
+            document.getElementById('admin-screen').classList.remove('hidden');
+        }
+
+        function backToMain() {
+            document.getElementById('admin-screen').classList.add('hidden');
+            document.getElementById('main-screen').classList.remove('hidden');
+        }
+
+        function logout() {
+            localStorage.removeItem('zlimb_user');
+            location.reload();
+        }
+
+        // Проверка при загрузке
+        const savedUser = localStorage.getItem('zlimb_user');
+        if(savedUser) showScreen(savedUser);
+
+        // Снег
         function createSnowflake() {
             const container = document.getElementById('snow-container');
             const flake = document.createElement('div');
             const size = Math.random() * 4 + 2 + 'px';
             flake.classList.add('snowflake');
-            flake.style.width = size;
-            flake.style.height = size;
+            flake.style.width = size; flake.style.height = size;
             flake.style.left = Math.random() * window.innerWidth + 'px';
             flake.style.top = '-10px';
-            flake.style.opacity = Math.random();
             container.appendChild(flake);
-
-            const anim = flake.animate([
-                { transform: 'translateY(0)', opacity: flake.style.opacity },
-                { transform: `translateY(${window.innerHeight + 20}px)`, opacity: 0 }
-            ], { duration: Math.random() * 3000 + 2000, easing: 'linear' });
-
-            anim.onfinish = () => flake.remove();
+            flake.animate([{ transform: 'translateY(0)' }, { transform: `translateY(${window.innerHeight + 20}px)` }], 
+            { duration: Math.random() * 3000 + 2000, easing: 'linear' }).onfinish = () => flake.remove();
         }
         setInterval(createSnowflake, 100);
     </script>
