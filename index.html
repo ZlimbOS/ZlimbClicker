@@ -7,45 +7,18 @@
     <style>
         @import url('https://googleapis.com');
         :root { --accent: #7B61FF; --bg: #0b0d14; --card-bg: rgba(255, 255, 255, 0.03); }
-        
         body { margin: 0; background: var(--bg); color: white; font-family: 'Inter', sans-serif; overflow: hidden; height: 100vh; display: flex; justify-content: center; align-items: center; }
         #particles-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
-
-        /* Кнопка Профиля в углу */
-        #profile-trigger {
-            position: fixed; top: 20px; right: 20px; z-index: 100;
-            background: var(--card-bg); backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px;
-            padding: 10px 18px; cursor: pointer; display: flex; align-items: center; gap: 10px;
-            transition: 0.3s; border-bottom: 2px solid var(--accent);
-        }
+        #profile-trigger { position: fixed; top: 20px; right: 20px; z-index: 100; background: var(--card-bg); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 10px 18px; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: 0.3s; border-bottom: 2px solid var(--accent); }
         #profile-trigger:hover { background: rgba(255, 255, 255, 0.1); transform: scale(1.05); }
-
-        .card { 
-            background: var(--card-bg); backdrop-filter: blur(25px); 
-            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 30px; 
-            padding: 40px; text-align: center; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7); 
-            z-index: 10; width: 380px; position: relative;
-        }
-
-        /* Выпадающее меню профиля */
-        #side-menu {
-            position: fixed; top: 80px; right: 20px; width: 300px;
-            background: rgba(15, 17, 26, 0.95); backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.1); border-radius: 20px;
-            padding: 25px; z-index: 99; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            transform: translateX(400px); box-shadow: 0 20px 40px rgba(0,0,0,0.8);
-        }
+        .card { background: var(--card-bg); backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 30px; padding: 40px; text-align: center; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7); z-index: 10; width: 380px; position: relative; }
+        #side-menu { position: fixed; top: 80px; right: 20px; width: 300px; background: rgba(15, 17, 26, 0.98); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 25px; z-index: 99; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform: translateX(450px); box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
         #side-menu.active { transform: translateX(0); }
-
         h1 { font-size: 2rem; margin: 0 0 20px; background: linear-gradient(45deg, var(--accent), #00A2FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; }
         input { width: 100%; padding: 14px; margin-bottom: 12px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; outline: none; box-sizing: border-box; font-size: 0.9rem; }
-        
-        .btn { width: 100%; background: var(--accent); color: white; border: none; padding: 14px; border-radius: 12px; font-weight: bold; cursor: pointer; transition: 0.3s; display: block; margin-top: 10px; text-decoration: none; font-size: 1rem; }
-        .btn:hover { filter: brightness(1.2); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(123, 97, 255, 0.3); }
+        .btn { width: 100%; background: var(--accent); color: white; border: none; padding: 14px; border-radius: 12px; font-weight: bold; cursor: pointer; transition: 0.3s; display: block; margin-top: 10px; text-decoration: none; font-size: 1rem; text-align: center; }
+        .btn:hover { filter: brightness(1.2); transform: translateY(-2px); }
         .btn-outline { background: transparent; border: 1px solid rgba(255,255,255,0.15); font-size: 0.8rem; }
-        .btn-admin { background: #FF4B4B; }
-        
         .hidden { display: none; }
         .snowflake { position: absolute; background: white; border-radius: 50%; pointer-events: none; }
     </style>
@@ -53,72 +26,73 @@
 <body>
     <div id="particles-bg"></div>
 
-    <!-- КНОПКА ПРОФИЛЬ -->
+    <!-- КНОПКА ПРОФИЛЯ -->
     <div id="profile-trigger" class="hidden" onclick="toggleMenu()">
         <span id="nav-username">User</span>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
     </div>
 
-    <!-- ВХОД -->
+    <!-- ЭКРАН ВХОДА -->
     <div class="card" id="screen-auth">
         <h1>Zlimb Login</h1>
         <input type="text" id="login-user" placeholder="Ваш никнейм">
-        <div id="pass-field" class="hidden">
+        <div id="pass-container" class="hidden">
             <input type="password" id="login-pass" placeholder="Пароль администратора">
         </div>
         <button class="btn" onclick="handleAuth()">ПРОДОЛЖИТЬ</button>
     </div>
 
-    <!-- ГЛАВНАЯ (ЛАУНЧЕР) -->
+    <!-- ЭКРАН ЛАУНЧЕРА -->
     <div class="card hidden" id="screen-launcher">
         <h1>Zlimb OS</h1>
-        <p style="color: #8F93A3; margin-bottom: 25px;">Система готова к загрузке.</p>
+        <p style="color: #8F93A3; margin-bottom: 25px;">Система готова к работе.</p>
         <a href="https://yandex.ru" target="_blank" class="btn">СКАЧАТЬ ЛАУНЧЕР</a>
     </div>
 
     <!-- МЕНЮ ПРОФИЛЯ -->
     <div id="side-menu">
         <h2 id="menu-name" style="margin-top:0">Username</h2>
-        <p id="menu-status" style="font-size:0.7rem; color: #7B61FF; letter-spacing:1px; margin-bottom:20px">USER STATUS</p>
+        <p id="menu-status" style="font-size:0.7rem; color: #7B61FF; letter-spacing:1px; margin-bottom:20px">USER</p>
         
-        <!-- БЛОК АДМИНА -->
         <div id="admin-panel" class="hidden">
             <p style="color: #FF4B4B; font-size: 0.8rem; font-weight: bold; border-top: 1px solid #222; padding-top: 15px;">АДМИН-ПАНЕЛЬ</p>
-            <button class="btn btn-outline" onclick="setTheme('snow')">❄️ Эффект: Снег</button>
-            <button class="btn btn-outline" onclick="setTheme('matrix')">📟 Эффект: Матрица</button>
-            <button class="btn btn-outline" onclick="setTheme('fire')">🔥 Эффект: Огонь</button>
-            
-            <p style="color: #555; font-size: 0.7rem; margin-top:15px">ВЫДАЧА АДМИНКИ (КЛЮЧ)</p>
-            <input type="text" id="new-key" placeholder="Придумайте ключ" style="font-size:0.8rem">
-            <button class="btn btn-outline" style="border-color:#FF4B4B" onclick="createKey()">СОЗДАТЬ</button>
+            <button class="btn btn-outline" onclick="setTheme('snow')">❄️ Снег</button>
+            <button class="btn btn-outline" onclick="setTheme('matrix')">📟 Матрица</button>
+            <button class="btn btn-outline" onclick="setTheme('fire')">🔥 Огонь</button>
         </div>
 
-        <!-- БЛОК ОБЫЧНОГО ЮЗЕРА -->
         <div id="user-activation">
             <p style="color: #555; font-size: 0.7rem; margin-top:15px">АКТИВАЦИЯ АДМИНКИ</p>
-            <input type="text" id="use-key" placeholder="Введите ключ">
-            <button class="btn btn-outline" onclick="activateAdmin()">АКТИВИРОВАТЬ</button>
+            <input type="text" id="use-key" placeholder="Введите ключ доступа">
+            <div id="setup-pass-box" class="hidden">
+                <input type="password" id="new-admin-pass" placeholder="Придумайте пароль админа">
+            </div>
+            <button class="btn btn-outline" id="activate-btn" onclick="activateAdmin()">АКТИВИРОВАТЬ</button>
         </div>
-
-        <button class="btn btn-logout" style="background:#222; margin-top:30px" onclick="logout()">ВЫЙТИ</button>
+        <button class="btn" style="background:#222; margin-top:30px" onclick="logout()">ВЫЙТИ</button>
     </div>
 
     <script>
         const OWNER_NAME = 'zl1mbyys';
         const OWNER_PASS = 'Tema10052014!';
-        
+        const GLOBAL_KEYS = ['ДРУГ1', 'ZLIMB_2026']; // Ключи для активации админки
+
         let state = {
             user: localStorage.getItem('z_user'),
             isAdmin: localStorage.getItem('z_admin') === 'true',
+            savedPass: localStorage.getItem('z_admin_pass'),
             theme: localStorage.getItem('z_theme') || 'snow'
         };
 
-        // Слежение за вводом ника для показа поля пароля
+        // Логика показа поля пароля на входе
         document.getElementById('login-user').addEventListener('input', (e) => {
-            if(e.target.value.toLowerCase() === OWNER_NAME) {
-                document.getElementById('pass-field').classList.remove('hidden');
+            const val = e.target.value.toLowerCase();
+            const passBox = document.getElementById('pass-container');
+            // Показываем пароль если это владелец ИЛИ если у этого юзера уже есть сохраненный пароль админа
+            if(val === OWNER_NAME || (val === localStorage.getItem('z_user') && state.isAdmin)) {
+                passBox.classList.remove('hidden');
             } else {
-                document.getElementById('pass-field').classList.add('hidden');
+                passBox.classList.add('hidden');
             }
         });
 
@@ -127,20 +101,43 @@
             const pass = document.getElementById('login-pass').value;
 
             if(user.toLowerCase() === OWNER_NAME) {
-                if(pass === OWNER_PASS) {
-                    saveLogin(user, true);
-                } else {
-                    alert("Неверный пароль владельца!");
-                }
-            } else if(user.length > 2) {
-                saveLogin(user, false);
+                if(pass === OWNER_PASS) saveLogin(user, true, OWNER_PASS);
+                else alert("Неверный пароль владельца!");
+            } else if(state.isAdmin && user === state.user) {
+                if(pass === state.savedPass) saveLogin(user, true, state.savedPass);
+                else alert("Неверный пароль администратора!");
+            } else if(user.length > 1) {
+                saveLogin(user, false, null);
             }
         }
 
-        function saveLogin(user, admin) {
+        function saveLogin(user, admin, pass) {
             localStorage.setItem('z_user', user);
             localStorage.setItem('z_admin', admin);
+            if(pass) localStorage.setItem('z_admin_pass', pass);
             location.reload();
+        }
+
+        function activateAdmin() {
+            const k = document.getElementById('use-key').value;
+            const setupBox = document.getElementById('setup-pass-box');
+            const newPass = document.getElementById('new-admin-pass').value;
+
+            if(GLOBAL_KEYS.includes(k)) {
+                setupBox.classList.remove('hidden');
+                document.getElementById('activate-btn').innerText = "ПОДТВЕРДИТЬ ПАРОЛЬ";
+                
+                if(newPass.length > 3) {
+                    localStorage.setItem('z_admin', 'true');
+                    localStorage.setItem('z_admin_pass', newPass);
+                    alert("Админка активирована! Ваш пароль сохранен.");
+                    location.reload();
+                } else if (setupBox.style.display !== 'none' && newPass !== "") {
+                    alert("Пароль должен быть длиннее 3 символов!");
+                }
+            } else {
+                alert("Неверный ключ доступа!");
+            }
         }
 
         function init() {
@@ -151,7 +148,7 @@
             document.getElementById('nav-username').innerText = state.user;
             document.getElementById('menu-name').innerText = state.user;
 
-            if(state.isAdmin || state.user.toLowerCase() === OWNER_NAME) {
+            if(state.isAdmin) {
                 document.getElementById('admin-panel').classList.remove('hidden');
                 document.getElementById('user-activation').classList.add('hidden');
                 document.getElementById('menu-status').innerText = "ADMINISTRATOR";
@@ -159,60 +156,22 @@
             }
         }
 
-        function toggleMenu() {
-            document.getElementById('side-menu').classList.toggle('active');
-        }
+        function toggleMenu() { document.getElementById('side-menu').classList.toggle('active'); }
+        function setTheme(t) { localStorage.setItem('z_theme', t); location.reload(); }
+        function logout() { localStorage.clear(); location.reload(); }
 
-        function setTheme(t) {
-            localStorage.setItem('z_theme', t);
-            location.reload();
-        }
-
-        function createKey() {
-            const k = document.getElementById('new-key').value;
-            if(!k) return;
-            let keys = JSON.parse(localStorage.getItem('z_keys') || '[]');
-            keys.push(k);
-            localStorage.setItem('z_keys', JSON.stringify(keys));
-            alert("Ключ " + k + " создан!");
-        }
-
-        function activateAdmin() {
-            const k = document.getElementById('use-key').value;
-            let keys = JSON.parse(localStorage.getItem('z_keys') || '[]');
-            if(keys.includes(k)) {
-                localStorage.setItem('z_admin', 'true');
-                alert("Админ-права получены!");
-                location.reload();
-            } else {
-                alert("Неверный ключ!");
-            }
-        }
-
-        function logout() {
-            localStorage.clear();
-            location.reload();
-        }
-
-        // Анимация частиц
         function spawn() {
             const cont = document.getElementById('particles-bg');
             const p = document.createElement('div');
             p.classList.add('snowflake');
             let size = Math.random() * 4 + 2;
             p.style.width = size + 'px'; p.style.height = size + 'px';
-            
-            if(state.theme === 'matrix') p.style.background = "#00FF41";
-            else if(state.theme === 'fire') p.style.background = "orange";
-            else p.style.background = "white";
-
+            p.style.background = state.theme === 'matrix' ? "#00FF41" : (state.theme === 'fire' ? "orange" : "white");
             p.style.left = Math.random() * window.innerWidth + 'px';
             p.style.top = '-10px';
             cont.appendChild(p);
-            p.animate([{ transform: 'translateY(0)' }, { transform: `translateY(${window.innerHeight + 20}px)` }], 
-            { duration: Math.random() * 3000 + 2000 }).onfinish = () => p.remove();
+            p.animate([{ transform: 'translateY(0)' }, { transform: `translateY(${window.innerHeight + 20}px)` }], { duration: Math.random() * 3000 + 2000 }).onfinish = () => p.remove();
         }
-        
         setInterval(spawn, 100);
         init();
     </script>
