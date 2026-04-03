@@ -39,6 +39,10 @@
         <div id="pass-container" class="hidden">
             <input type="password" id="login-pass" placeholder="Пароль администратора">
         </div>
+        <div id="setup-pass-container" class="hidden">
+            <p style="font-size: 0.7rem; color: #7B61FF; margin-bottom: 5px;">Вам выдан доступ! Придумайте пароль:</p>
+            <input type="password" id="setup-new-pass" placeholder="Новый пароль">
+        </div>
         <button class="btn" onclick="handleAuth()">ПРОДОЛЖИТЬ</button>
     </div>
 
@@ -60,22 +64,16 @@
             <button class="btn btn-outline" onclick="setTheme('matrix')">📟 Матрица</button>
             <button class="btn btn-outline" onclick="setTheme('fire')">🔥 Огонь</button>
         </div>
-
-        <div id="user-activation">
-            <p style="color: #555; font-size: 0.7rem; margin-top:15px">АКТИВАЦИЯ АДМИНКИ</p>
-            <input type="text" id="use-key" placeholder="Введите ключ доступа">
-            <div id="setup-pass-box" class="hidden">
-                <input type="password" id="new-admin-pass" placeholder="Придумайте пароль админа">
-            </div>
-            <button class="btn btn-outline" id="activate-btn" onclick="activateAdmin()">АКТИВИРОВАТЬ</button>
-        </div>
         <button class="btn" style="background:#222; margin-top:30px" onclick="logout()">ВЫЙТИ</button>
     </div>
 
     <script>
+        // --- НАСТРОЙКИ ДОСТУПА ---
         const OWNER_NAME = 'zl1mbyys';
         const OWNER_PASS = 'Tema10052014!';
-        const GLOBAL_KEYS = ['ДРУГ1', 'ZLIMB_2026']; // Ключи для активации админки
+
+        // --- СПИСОК НИКОВ, КОМУ ВЫДАНА АДМИНКА ---
+        const ADMIN_WHITELIST = ['ДРУГ1', 'БРО_НИК', 'GUEST123']; 
 
         let state = {
             user: localStorage.getItem('z_user'),
@@ -84,29 +82,59 @@
             theme: localStorage.getItem('z_theme') || 'snow'
         };
 
-        // Логика показа поля пароля на входе
+        // Логика динамических полей при вводе ника
         document.getElementById('login-user').addEventListener('input', (e) => {
-            const val = e.target.value.toLowerCase();
+            const val = e.target.value.trim();
+            const valLow = val.toLowerCase();
             const passBox = document.getElementById('pass-container');
-            // Показываем пароль если это владелец ИЛИ если у этого юзера уже есть сохраненный пароль админа
-            if(val === OWNER_NAME || (val === localStorage.getItem('z_user') && state.isAdmin)) {
+            const setupBox = document.getElementById('setup-pass-container');
+
+            // 1. Если владелец
+            if(valLow === OWNER_NAME) {
                 passBox.classList.remove('hidden');
-            } else {
+                setupBox.classList.add('hidden');
+            } 
+            // 2. Если в вайтлисте, но пароль еще не создан
+            else if(ADMIN_WHITELIST.includes(val) && !localStorage.getItem('z_pass_' + val)) {
+                setupBox.classList.remove('hidden');
                 passBox.classList.add('hidden');
+            }
+            // 3. Если в вайтлисте и пароль уже есть в памяти браузера
+            else if(ADMIN_WHITELIST.includes(val) && localStorage.getItem('z_pass_' + val)) {
+                passBox.classList.remove('hidden');
+                setupBox.classList.add('hidden');
+            }
+            else {
+                passBox.classList.add('hidden');
+                setupBox.classList.add('hidden');
             }
         });
 
         function handleAuth() {
             const user = document.getElementById('login-user').value.trim();
-            const pass = document.getElementById('login-pass').value;
+            const passInput = document.getElementById('login-pass').value;
+            const setupPass = document.getElementById('setup-new-pass').value;
 
+            // Вход Владельца
             if(user.toLowerCase() === OWNER_NAME) {
-                if(pass === OWNER_PASS) saveLogin(user, true, OWNER_PASS);
+                if(passInput === OWNER_PASS) saveLogin(user, true, OWNER_PASS);
                 else alert("Неверный пароль владельца!");
-            } else if(state.isAdmin && user === state.user) {
-                if(pass === state.savedPass) saveLogin(user, true, state.savedPass);
-                else alert("Неверный пароль администратора!");
-            } else if(user.length > 1) {
+            } 
+            // Первый вход Админа из Вайтлиста (создание пароля)
+            else if(ADMIN_WHITELIST.includes(user) && !localStorage.getItem('z_pass_' + user)) {
+                if(setupPass.length >= 4) {
+                    localStorage.setItem('z_pass_' + user, setupPass);
+                    saveLogin(user, true, setupPass);
+                } else alert("Придумайте пароль от 4 символов!");
+            }
+            // Обычный вход Админа по его паролю
+            else if(ADMIN_WHITELIST.includes(user)) {
+                const realPass = localStorage.getItem('z_pass_' + user);
+                if(passInput === realPass) saveLogin(user, true, realPass);
+                else alert("Неверный личный пароль админа!");
+            }
+            // Вход обычного пользователя
+            else if(user.length > 1) {
                 saveLogin(user, false, null);
             }
         }
@@ -116,28 +144,6 @@
             localStorage.setItem('z_admin', admin);
             if(pass) localStorage.setItem('z_admin_pass', pass);
             location.reload();
-        }
-
-        function activateAdmin() {
-            const k = document.getElementById('use-key').value;
-            const setupBox = document.getElementById('setup-pass-box');
-            const newPass = document.getElementById('new-admin-pass').value;
-
-            if(GLOBAL_KEYS.includes(k)) {
-                setupBox.classList.remove('hidden');
-                document.getElementById('activate-btn').innerText = "ПОДТВЕРДИТЬ ПАРОЛЬ";
-                
-                if(newPass.length > 3) {
-                    localStorage.setItem('z_admin', 'true');
-                    localStorage.setItem('z_admin_pass', newPass);
-                    alert("Админка активирована! Ваш пароль сохранен.");
-                    location.reload();
-                } else if (setupBox.style.display !== 'none' && newPass !== "") {
-                    alert("Пароль должен быть длиннее 3 символов!");
-                }
-            } else {
-                alert("Неверный ключ доступа!");
-            }
         }
 
         function init() {
@@ -150,7 +156,6 @@
 
             if(state.isAdmin) {
                 document.getElementById('admin-panel').classList.remove('hidden');
-                document.getElementById('user-activation').classList.add('hidden');
                 document.getElementById('menu-status').innerText = "ADMINISTRATOR";
                 document.getElementById('menu-status').style.color = "#FF4B4B";
             }
@@ -158,7 +163,14 @@
 
         function toggleMenu() { document.getElementById('side-menu').classList.toggle('active'); }
         function setTheme(t) { localStorage.setItem('z_theme', t); location.reload(); }
-        function logout() { localStorage.clear(); location.reload(); }
+        function logout() { 
+            // Сохраняем личные пароли, но выходим из сессии
+            const user = localStorage.getItem('z_user');
+            localStorage.removeItem('z_user');
+            localStorage.removeItem('z_admin');
+            localStorage.removeItem('z_admin_pass');
+            location.reload(); 
+        }
 
         function spawn() {
             const cont = document.getElementById('particles-bg');
