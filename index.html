@@ -18,190 +18,144 @@
 
         body { margin: 0; background: var(--bg); color: white; font-family: 'Plus Jakarta Sans', sans-serif; overflow: hidden; height: 100vh; display: flex; justify-content: center; align-items: center; }
         
-        /* ТОТ САМЫЙ КРАСИВЫЙ ФОН */
         .mesh-bg { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: 
-                radial-gradient(at 10% 10%, rgba(123, 97, 255, 0.15) 0px, transparent 45%),
-                radial-gradient(at 90% 90%, rgba(0, 209, 255, 0.1) 0px, transparent 45%);
+            background: radial-gradient(at 10% 10%, rgba(123, 97, 255, 0.15) 0px, transparent 45%), radial-gradient(at 90% 90%, rgba(0, 209, 255, 0.1) 0px, transparent 45%);
             z-index: -2; filter: blur(60px); 
         }
         
         #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; opacity: 0.8; }
 
-        /* Таймер в углу */
         #session-timer { 
             position: fixed; top: 30px; left: 30px; z-index: 999; 
             background: var(--glass); border: 1px solid var(--border); 
             padding: 12px 22px; border-radius: 20px; backdrop-filter: blur(25px); 
-            font-family: monospace; font-size: 1.1rem; color: var(--accent); 
-            display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            font-family: monospace; font-size: 1.1rem; color: var(--accent); display: none;
         }
 
-        /* Кнопка Профиля */
         #profile-trigger { 
             position: fixed; top: 30px; right: 30px; z-index: 999; 
             background: var(--glass); backdrop-filter: blur(25px); 
             border: 1px solid var(--border); border-radius: 22px; 
-            padding: 10px 24px; cursor: pointer; display: flex; 
-            align-items: center; gap: 14px; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
+            padding: 10px 24px; cursor: pointer; display: flex; align-items: center; gap: 14px; 
         }
-        #profile-trigger:hover { border-color: var(--accent); transform: scale(1.05); background: rgba(255,255,255,0.06); }
 
-        /* Стеклянные карточки */
         .glass-card { 
-            background: rgba(255, 255, 255, 0.02); 
-            backdrop-filter: blur(50px) saturate(200%); 
+            background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(50px) saturate(200%); 
             border: 1px solid var(--border); border-radius: 44px; 
-            padding: 60px; text-align: center; width: 420px; 
-            box-shadow: 0 50px 120px rgba(0, 0, 0, 0.9); z-index: 100; 
+            padding: 50px; text-align: center; width: 400px; z-index: 100; 
         }
 
-        h1 { font-size: 2.8rem; font-weight: 800; margin: 0 0 35px; background: linear-gradient(135deg, #fff 30%, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; }
+        h1 { font-size: 2.5rem; font-weight: 800; margin: 0 0 30px; background: linear-gradient(135deg, #fff 30%, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
-        input { width: 100%; padding: 20px; margin-bottom: 14px; background: rgba(0, 0, 0, 0.4); border: 1px solid var(--border); border-radius: 18px; color: white; outline: none; font-size: 1rem; transition: 0.3s; }
-        input:focus { border-color: var(--accent); box-shadow: 0 0 25px var(--accent-glow); }
+        input { width: 100%; padding: 18px; margin-bottom: 12px; background: rgba(0, 0, 0, 0.4); border: 1px solid var(--border); border-radius: 16px; color: white; outline: none; font-size: 1rem; }
+        input:focus { border-color: var(--accent); box-shadow: 0 0 20px var(--accent-glow); }
 
-        .btn { width: 100%; background: var(--accent); color: white; border: none; padding: 20px; border-radius: 18px; font-weight: 700; cursor: pointer; transition: 0.4s; display: block; margin-top: 10px; text-decoration: none; font-size: 1rem; text-align: center; }
-        .btn:hover { transform: translateY(-4px); box-shadow: 0 20px 40px var(--accent-glow); filter: brightness(1.1); }
+        .btn { width: 100%; background: var(--accent); color: white; border: none; padding: 18px; border-radius: 16px; font-weight: 700; cursor: pointer; transition: 0.3s; display: block; margin-top: 10px; text-decoration: none; font-size: 1rem; text-align: center; }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 15px 30px var(--accent-glow); }
+        .btn-sec { background: transparent; border: 1px solid var(--border); margin-top: 5px; color: #888; font-size: 0.85rem; }
 
-        /* Админ-панель */
         #side-menu { 
-            position: fixed; top: 0; right: 0; height: 100vh; width: 420px; 
+            position: fixed; top: 0; right: 0; height: 100vh; width: 400px; 
             background: rgba(4, 5, 8, 0.96); backdrop-filter: blur(80px); 
             border-left: 1px solid var(--border); z-index: 1000; 
-            padding: 60px 45px; transition: 0.6s cubic-bezier(0.19, 1, 0.22, 1); 
-            transform: translateX(100%); box-sizing: border-box;
+            padding: 60px 45px; transition: 0.6s cubic-bezier(0.19, 1, 0.22, 1); transform: translateX(100%); 
         }
-        #side-menu.active { transform: translateX(0); box-shadow: -50px 0 150px rgba(0,0,0,0.9); }
-
-        .admin-item { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 16px; margin-bottom: 10px; border: 1px solid var(--border); }
-        .remove-btn { background: rgba(255,0,0,0.15); color: var(--danger); border: 1px solid var(--danger); padding: 6px 12px; border-radius: 10px; cursor: pointer; font-size: 0.75rem; }
-
+        #side-menu.active { transform: translateX(0); }
+        .admin-item { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); padding: 12px; border-radius: 12px; margin-bottom: 8px; border: 1px solid var(--border); }
         .hidden { display: none !important; }
     </style>
 </head>
 <body>
     <div class="mesh-bg"></div>
     <canvas id="bg-canvas"></canvas>
-    
     <div id="session-timer">ОСТАЛОСЬ: <span id="time-val">24:00:00</span></div>
 
-    <!-- ПРОФИЛЬ -->
     <div id="profile-trigger" class="hidden" onclick="toggleMenu()">
-        <span id="nav-user" style="font-weight: 600;">Username</span>
-        <div style="width:10px; height:10px; background: #2ECC71; border-radius:50%; box-shadow: 0 0 12px #2ECC71;"></div>
+        <span id="nav-user">User</span>
+        <div style="width:10px; height:10px; background: #2ECC71; border-radius:50%; box-shadow: 0 0 10px #2ECC71;"></div>
     </div>
 
-    <!-- ВХОД -->
+    <!-- ЭКРАН ВХОДА -->
     <div class="glass-card" id="screen-auth">
         <h1>Zlimb OS</h1>
         <input type="text" id="login-user" placeholder="Логин">
-        <div id="pass-field" class="hidden"><input type="password" id="login-pass" placeholder="Пароль"></div>
-        <div id="setup-pass-field" class="hidden">
-            <p style="font-size: 0.85rem; color: var(--accent); margin-bottom: 15px;">Доступ разрешен. Придумайте пароль:</p>
-            <input type="password" id="setup-new-pass" placeholder="Ваш новый пароль">
-        </div>
-        <button class="btn" onclick="handleAuth()">ВОЙТИ В СИСТЕМУ</button>
+        <input type="password" id="login-pass" placeholder="Пароль">
+        <button class="btn" onclick="handleAuth()">ВОЙТИ</button>
+        <button class="btn btn-sec" onclick="switchForm('reg')">У меня нет аккаунта</button>
     </div>
 
-    <!-- СКАЧИВАНИЕ -->
+    <!-- ЭКРАН РЕГИСТРАЦИИ -->
+    <div class="glass-card hidden" id="screen-reg">
+        <h1>Создать аккаунт</h1>
+        <input type="text" id="reg-user" placeholder="Придумайте Логин">
+        <input type="password" id="reg-pass" placeholder="Придумайте Пароль">
+        <button class="btn" onclick="handleReg()">ЗАРЕГИСТРИРОВАТЬСЯ</button>
+        <button class="btn btn-sec" onclick="switchForm('auth')">Вернуться назад</button>
+    </div>
+
+    <!-- ЛАУНЧЕР -->
     <div class="glass-card hidden" id="screen-launcher">
         <h1>Zlimb Ultra</h1>
-        <p style="color: rgba(255,255,255,0.4); margin-bottom: 45px; line-height: 1.6;">Авторизация успешна.<br>Файл скачивается на ваш ПК...</p>
+        <p style="color: rgba(255,255,255,0.4); margin-bottom: 40px;">Загрузка файла ZlimbClicker.exe...</p>
         <a href="https://dropbox.com" 
            id="auto-dl" target="_blank" class="btn">СКАЧАТЬ ВРУЧНУЮ</a>
     </div>
 
     <!-- АДМИНКА -->
     <div id="side-menu">
-        <div style="background: var(--accent); padding: 5px 14px; border-radius: 10px; font-size: 0.7rem; display: inline-block; font-weight: 800; letter-spacing: 1px;">OWNER</div>
-        <h2 id="menu-name" style="font-size: 2.2rem; margin: 15px 0; font-weight: 800;">Username</h2>
-        
+        <h2 id="menu-name">Username</h2>
         <div id="admin-section" class="hidden">
-            <p style="color: var(--accent); font-weight: 800; margin-top: 50px; border-top: 1px solid var(--border); padding-top: 25px; font-size: 0.8rem; letter-spacing: 1px;">MANAGEMENT</p>
-            <p style="color: #666; font-size: 0.75rem; font-weight: 800; margin-bottom: 15px;">ADD TO WHITELIST</p>
-            <div style="display: flex; gap: 12px;">
-                <input type="text" id="target-nick" placeholder="Никнейм" style="margin:0; padding: 15px;">
-                <button class="btn" style="margin:0; width: 90px;" onclick="addAdmin()">ADD</button>
-            </div>
-            <div id="admin-list-box" style="margin-top: 25px;"></div>
+            <p style="color: var(--accent); font-weight: 800; margin-top: 40px; border-top: 1px solid var(--border); padding-top: 20px;">УПРАВЛЕНИЕ ЮЗЕРАМИ</p>
+            <div id="admin-list-box" style="margin-top: 20px;"></div>
         </div>
-
-        <div style="position: absolute; bottom: 50px; left: 45px; right: 45px;">
-            <button class="btn" style="background:rgba(255,0,0,0.1); color:var(--danger); border: 1px solid rgba(255,0,0,0.1);" onclick="logout()">ВЫЙТИ</button>
-            <button class="btn" style="background: var(--glass); margin-top: 15px;" onclick="toggleMenu()">ЗАКРЫТЬ</button>
-        </div>
+        <button class="btn" style="background:rgba(255,0,0,0.1); color:var(--danger); margin-top:60px;" onclick="logout()">ВЫЙТИ</button>
+        <button class="btn btn-sec" onclick="toggleMenu()">ЗАКРЫТЬ</button>
     </div>
 
     <script>
         const OWNER = 'zl1mbyys';
         const OWNER_P = 'Tema10052014!';
 
-        // КРАСИВЫЙ СНЕГ
-        const canvas = document.getElementById('bg-canvas');
-        const ctx = canvas.getContext('2d');
-        let snow = [];
-
-        function initSnow() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            snow = Array.from({length: 120}, () => ({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                r: Math.random() * 3 + 1,
-                s: Math.random() * 1 + 0.5,
-                o: Math.random() * 0.5 + 0.3
-            }));
+        // Переключение окон
+        function switchForm(f) {
+            document.getElementById('screen-auth').classList.add('hidden');
+            document.getElementById('screen-reg').classList.add('hidden');
+            document.getElementById('screen-' + f).classList.remove('hidden');
         }
 
-        function drawSnow() {
-            ctx.clearRect(0,0,canvas.width, canvas.height);
-            snow.forEach(p => {
-                ctx.fillStyle = `rgba(255,255,255,${p.o})`;
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-                ctx.fill();
-                p.y += p.s;
-                p.x += Math.sin(p.y/40) * 0.5;
-                if(p.y > canvas.height) p.y = -10;
-            });
-            requestAnimationFrame(drawSnow);
-        }
-
-        // АВТОРИЗАЦИЯ
-        document.getElementById('login-user').addEventListener('input', (e) => {
-            const val = e.target.value.trim();
-            const whitelist = JSON.parse(localStorage.getItem('z_whitelist') || '[]');
-            const isOwner = val.toLowerCase() === OWNER.toLowerCase();
-            const inList = whitelist.includes(val);
-            const hasPass = localStorage.getItem('z_pass_' + val);
-
-            document.getElementById('pass-field').classList.toggle('hidden', !((isOwner) || (inList && hasPass)));
-            document.getElementById('setup-pass-field').classList.toggle('hidden', !(inList && !hasPass));
-        });
-
-        function handleAuth() {
-            const u = document.getElementById('login-user').value.trim();
-            const p = document.getElementById('login-pass').value.trim();
-            const whitelist = JSON.parse(localStorage.getItem('z_whitelist') || '[]');
+        // РЕГИСТРАЦИЯ
+        function handleReg() {
+            const u = document.getElementById('reg-user').value.trim();
+            const p = document.getElementById('reg-pass').value.trim();
+            if(u.length < 3 || p.length < 4) return alert('Слишком короткий логин/пароль');
             
-            if (u.toLowerCase() === OWNER.toLowerCase() && p === OWNER_P) {
-                saveLogin(u, 'OWNER');
-            } else if (whitelist.includes(u) && !localStorage.getItem('z_pass_' + u)) {
-                const newP = document.getElementById('setup-new-pass').value;
-                if(newP.length < 4) return alert('Минимум 4 символа!');
-                localStorage.setItem('z_pass_' + u, newP);
-                saveLogin(u, 'USER');
-            } else if (whitelist.includes(u) && p === localStorage.getItem('z_pass_' + u)) {
-                saveLogin(u, 'USER');
+            let users = JSON.parse(localStorage.getItem('z_users_db') || '{}');
+            if(users[u.toLowerCase()] || u.toLowerCase() === OWNER) return alert('Ник занят');
+
+            users[u.toLowerCase()] = { pass: p, created: Date.now() };
+            localStorage.setItem('z_users_db', JSON.stringify(users));
+            alert('Регистрация успешна! Теперь войдите.');
+            switchForm('auth');
+        }
+
+        // ВХОД
+        function handleAuth() {
+            const u = document.getElementById('login-user').value.trim().toLowerCase();
+            const p = document.getElementById('login-pass').value.trim();
+            const users = JSON.parse(localStorage.getItem('z_users_db') || '{}');
+
+            if (u === OWNER && p === OWNER_P) {
+                saveSession(u, 'OWNER');
+            } else if (users[u] && users[u].pass === p) {
+                saveSession(u, 'USER');
             } else {
                 alert('Неверные данные');
             }
         }
 
-        function saveLogin(u, role) {
-            localStorage.setItem('z_user', u);
+        function saveSession(u, role) {
+            localStorage.setItem('z_current_user', u);
             if (!localStorage.getItem('z_timer_' + u)) {
                 localStorage.setItem('z_timer_' + u, Date.now() + (24 * 60 * 60 * 1000));
             }
@@ -209,67 +163,66 @@
         }
 
         window.onload = () => {
-            initSnow();
-            drawSnow();
-            const u = localStorage.getItem('z_user');
+            initSnow(); drawSnow();
+            const u = localStorage.getItem('z_current_user');
             if (u) {
                 document.getElementById('screen-auth').classList.add('hidden');
                 document.getElementById('screen-launcher').classList.remove('hidden');
                 document.getElementById('profile-trigger').classList.remove('hidden');
                 document.getElementById('nav-user').innerText = u;
                 document.getElementById('menu-name').innerText = u;
-                if (u.toLowerCase() === OWNER) {
+                if (u === OWNER) {
                     document.getElementById('admin-section').classList.remove('hidden');
-                    renderWhitelist();
+                    renderUsers();
                 }
                 startTimer(u);
-                setTimeout(() => document.getElementById('auto-dl').click(), 1800);
+                setTimeout(() => document.getElementById('auto-dl').click(), 1500);
             }
         };
 
-        function startTimer(u) {
-            document.getElementById('session-timer').style.display = 'block';
-            setInterval(() => {
-                const diff = parseInt(localStorage.getItem('z_timer_' + u)) - Date.now();
-                if (diff <= 0) { logout(); return; }
-                const h = Math.floor(diff/3600000).toString().padStart(2,'0');
-                const m = Math.floor((diff%3600000)/60000).toString().padStart(2,'0');
-                const s = Math.floor((diff%60000)/1000).toString().padStart(2,'0');
-                document.getElementById('time-val').innerText = `${h}:${m}:${s}`;
-            }, 1000);
-        }
-
-        function addAdmin() {
-            const nick = document.getElementById('target-nick').value.trim();
-            if (!nick) return;
-            let list = JSON.parse(localStorage.getItem('z_whitelist') || '[]');
-            if (!list.includes(nick)) list.push(nick);
-            localStorage.setItem('z_whitelist', JSON.stringify(list));
-            renderWhitelist();
-            document.getElementById('target-nick').value = '';
-        }
-
-        function renderWhitelist() {
+        function renderUsers() {
             const box = document.getElementById('admin-list-box');
-            const list = JSON.parse(localStorage.getItem('z_whitelist') || '[]');
-            box.innerHTML = list.map(u => `
+            const users = JSON.parse(localStorage.getItem('z_users_db') || '{}');
+            box.innerHTML = Object.keys(users).map(name => `
                 <div class="admin-item">
-                    <span>${u}</span>
-                    <button class="remove-btn" onclick="removeUser('${u}')">УДАЛИТЬ</button>
+                    <span>${name}</span>
+                    <button style="color:red; background:none; border:none; cursor:pointer;" onclick="deleteUser('${name}')">X</button>
                 </div>
             `).join('');
         }
 
-        function removeUser(u) {
-            let list = JSON.parse(localStorage.getItem('z_whitelist') || '[]');
-            localStorage.setItem('z_whitelist', JSON.stringify(list.filter(i => i !== u)));
-            localStorage.removeItem('z_pass_' + u);
-            localStorage.removeItem('z_timer_' + u);
-            renderWhitelist();
+        function deleteUser(n) {
+            let users = JSON.parse(localStorage.getItem('z_users_db') || '{}');
+            delete users[n];
+            localStorage.setItem('z_users_db', JSON.stringify(users));
+            renderUsers();
         }
 
+        // Твой снег и таймер
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let snow = [];
+        function initSnow() {
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            snow = Array.from({length: 100}, () => ({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: Math.random()*3+1, s: Math.random()*1+0.5 }));
+        }
+        function drawSnow() {
+            ctx.clearRect(0,0,canvas.width, canvas.height);
+            ctx.fillStyle = "rgba(255,255,255,0.6)";
+            snow.forEach(p => { ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill(); p.y += p.s; if(p.y > canvas.height) p.y = -10; });
+            requestAnimationFrame(drawSnow);
+        }
+        function startTimer(u) {
+            document.getElementById('session-timer').style.display = 'block';
+            setInterval(() => {
+                const diff = parseInt(localStorage.getItem('z_timer_' + u)) - Date.now();
+                if (diff <= 0) logout();
+                const h = Math.floor(diff/3600000).toString().padStart(2,'0'), m = Math.floor((diff%3600000)/60000).toString().padStart(2,'0'), s = Math.floor((diff%60000)/1000).toString().padStart(2,'0');
+                document.getElementById('time-val').innerText = `${h}:${m}:${s}`;
+            }, 1000);
+        }
         function toggleMenu() { document.getElementById('side-menu').classList.toggle('active'); }
-        function logout() { localStorage.removeItem('z_user'); location.reload(); }
+        function logout() { localStorage.removeItem('z_current_user'); location.reload(); }
         window.onresize = initSnow;
     </script>
 </body>
