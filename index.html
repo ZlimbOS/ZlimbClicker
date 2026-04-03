@@ -3,156 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zlimb OS | Next Gen Launcher</title>
+    <title>Zlimb OS | Premium Edition</title>
     <style>
         @import url('https://googleapis.com');
         
         :root { 
             --accent: #7B61FF; 
-            --accent-glow: rgba(123, 97, 255, 0.5);
-            --bg: #050608; 
-            --card-bg: rgba(255, 255, 255, 0.04);
+            --accent-2: #00D1FF;
+            --bg: #030408; 
+            --glass: rgba(255, 255, 255, 0.03);
             --border: rgba(255, 255, 255, 0.08);
         }
 
         body { 
-            margin: 0; 
-            background: var(--bg); 
-            color: white; 
-            font-family: 'Inter', sans-serif; 
-            overflow: hidden; 
-            height: 100vh; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
+            margin: 0; background: var(--bg); color: white; 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            overflow: hidden; height: 100vh; 
+            display: flex; justify-content: center; align-items: center; 
         }
 
-        /* Анимированный фоновый градиент */
-        .bg-gradient {
+        /* Анимированный живой фон */
+        .mesh-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 20% 30%, #1a1033 0%, transparent 40%),
-                        radial-gradient(circle at 80% 70%, #0d1a33 0%, transparent 40%);
-            z-index: -1; filter: blur(80px); opacity: 0.6;
+            background: 
+                radial-gradient(at 0% 0%, rgba(123, 97, 255, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(0, 209, 255, 0.1) 0px, transparent 50%);
+            z-index: -1; animation: meshAnim 10s infinite alternate;
+        }
+        @keyframes meshAnim {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.1); }
         }
 
-        #particles-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+        #particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
 
-        /* Стиль кнопок и полей */
-        .card { 
-            background: var(--card-bg); 
-            backdrop-filter: blur(30px) saturate(180%); 
+        /* Карточки (Glassmorphism) */
+        .glass-card { 
+            background: var(--glass); 
+            backdrop-filter: blur(40px) saturate(150%); 
             border: 1px solid var(--border); 
-            border-radius: 32px; 
-            padding: 50px 40px; 
+            border-radius: 40px; 
+            padding: 60px 45px; 
             text-align: center; 
-            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8); 
-            z-index: 10; width: 400px; 
-            animation: fadeIn 0.8s ease-out;
+            box-shadow: 0 50px 100px rgba(0, 0, 0, 0.9); 
+            z-index: 10; width: 420px; 
+            animation: cardEntry 1s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes cardEntry {
+            from { opacity: 0; transform: scale(0.9) translateY(30px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
 
         h1 { 
-            font-size: 2.4rem; font-weight: 800; margin: 0 0 30px; 
-            letter-spacing: -1px;
-            background: linear-gradient(135deg, #fff 30%, var(--accent) 100%);
+            font-size: 2.8rem; font-weight: 800; margin: 0 0 35px; 
+            letter-spacing: -2px;
+            background: linear-gradient(to bottom right, #fff 40%, var(--accent) 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
         }
 
         input { 
-            width: 100%; padding: 18px; margin-bottom: 15px; 
-            background: rgba(0, 0, 0, 0.2); 
-            border: 1px solid var(--border); 
-            border-radius: 16px; color: white; 
-            outline: none; box-sizing: border-box; transition: 0.3s;
+            width: 100%; padding: 20px; margin-bottom: 15px; 
+            background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border); 
+            border-radius: 20px; color: white; outline: none; 
+            box-sizing: border-box; transition: 0.4s; font-size: 1rem;
         }
-        input:focus { border-color: var(--accent); background: rgba(0, 0, 0, 0.4); box-shadow: 0 0 15px var(--accent-glow); }
+        input:focus { border-color: var(--accent); box-shadow: 0 0 25px rgba(123, 97, 255, 0.2); }
 
-        .btn { 
-            width: 100%; background: var(--accent); color: white; 
-            border: none; padding: 18px; border-radius: 16px; 
-            font-weight: 600; cursor: pointer; transition: 0.4s; 
-            display: block; margin-top: 15px; text-decoration: none; 
-            font-size: 1.1rem; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        .btn-main { 
+            width: 100%; background: linear-gradient(135deg, var(--accent), var(--accent-2)); 
+            color: white; border: none; padding: 20px; border-radius: 20px; 
+            font-weight: 700; cursor: pointer; transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1); 
+            font-size: 1.1rem; text-decoration: none; display: block;
+            box-shadow: 0 10px 30px rgba(123, 97, 255, 0.3);
         }
-        .btn:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 15px 30px var(--accent-glow); filter: brightness(1.1); }
+        .btn-main:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(123, 97, 255, 0.5); filter: brightness(1.1); }
 
-        /* Профиль в углу */
-        #profile-trigger {
-            position: fixed; top: 30px; right: 30px; z-index: 100;
-            background: var(--card-bg); backdrop-filter: blur(15px);
-            border: 1px solid var(--border); border-radius: 20px;
-            padding: 12px 24px; cursor: pointer; display: flex; align-items: center; gap: 12px;
-            transition: 0.3s;
-        }
-        #profile-trigger:hover { background: rgba(255,255,255,0.1); border-color: var(--accent); }
-
-        /* Выезжающее меню */
-        #side-menu {
-            position: fixed; top: 100px; right: 30px; width: 340px;
-            background: rgba(10, 11, 15, 0.95); backdrop-filter: blur(25px);
+        /* Верхняя панель профиля */
+        #profile-hub {
+            position: fixed; top: 35px; right: 35px; z-index: 100;
+            background: var(--glass); backdrop-filter: blur(20px);
             border: 1px solid var(--border); border-radius: 24px;
-            padding: 30px; z-index: 99; transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1);
-            transform: translateX(450px);
+            padding: 10px 25px; cursor: pointer; display: flex; align-items: center; gap: 15px;
+            transition: 0.4s;
         }
-        #side-menu.active { transform: translateX(0); box-shadow: -20px 20px 60px rgba(0,0,0,0.5); }
+        #profile-hub:hover { border-color: var(--accent); transform: scale(1.05); }
 
+        /* Боковое меню */
+        #side-panel {
+            position: fixed; top: 0; right: 0; height: 100vh; width: 380px;
+            background: rgba(5, 6, 10, 0.85); backdrop-filter: blur(50px);
+            border-left: 1px solid var(--border); z-index: 150;
+            padding: 50px 40px; transition: 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+            transform: translateX(100%);
+        }
+        #side-panel.open { transform: translateX(0); box-shadow: -50px 0 100px rgba(0,0,0,0.8); }
+
+        .status-dot { width: 8px; height: 8px; background: #2ECC71; border-radius: 50%; box-shadow: 0 0 10px #2ECC71; }
         .hidden { display: none; }
         .snowflake { position: absolute; background: white; border-radius: 50%; pointer-events: none; }
-        .admin-section { border-top: 1px solid var(--border); margin-top: 25px; padding-top: 20px; }
     </style>
 </head>
 <body>
-    <div class="bg-gradient"></div>
-    <div id="particles-bg"></div>
+    <div class="mesh-bg"></div>
+    <div id="particles"></div>
 
-    <div id="profile-trigger" class="hidden" onclick="toggleMenu()">
-        <span id="nav-username" style="font-weight: 600;">User</span>
-        <div style="width:32px; height:32px; background: var(--accent); border-radius:10px; display:flex; align-items:center; justify-content:center;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-        </div>
+    <!-- HUB ПРОФИЛЯ -->
+    <div id="profile-hub" class="hidden" onclick="toggleSidebar()">
+        <div class="status-dot"></div>
+        <span id="nav-name" style="font-weight: 600; font-size: 0.9rem;">Guest</span>
+        <img src="https://flaticon.com" width="24" style="filter: invert(1); opacity: 0.8;">
     </div>
 
-    <div class="card" id="screen-auth">
+    <!-- ОКНО АВТОРИЗАЦИИ -->
+    <div class="glass-card" id="auth-screen">
         <h1>Zlimb OS</h1>
-        <input type="text" id="login-user" placeholder="Имя пользователя">
-        <div id="pass-container" class="hidden"><input type="password" id="login-pass" placeholder="Ключ доступа"></div>
-        <div id="setup-pass-container" class="hidden">
-            <p style="font-size: 0.8rem; color: var(--accent); margin-bottom: 10px;">Доступ подтвержден. Создайте пароль:</p>
-            <input type="password" id="setup-new-pass" placeholder="Новый пароль">
+        <input type="text" id="login-user" placeholder="Username">
+        <div id="pass-field" class="hidden"><input type="password" id="login-pass" placeholder="System Key"></div>
+        <div id="setup-pass-field" class="hidden">
+            <p style="font-size: 0.8rem; color: var(--accent-2); margin-bottom: 10px;">Access Granted. Set your password:</p>
+            <input type="password" id="setup-new-pass" placeholder="New Password">
         </div>
-        <button class="btn" onclick="handleAuth()">Войти в систему</button>
+        <button class="btn-main" onclick="handleAuth()">Initialize System</button>
     </div>
 
-    <div class="card hidden" id="screen-launcher">
-        <h1 style="font-size: 1.8rem;">Добро пожаловать</h1>
-        <p style="color: rgba(255,255,255,0.5); margin-bottom: 40px; font-weight: 300;">Ваше персональное рабочее пространство Zlimb готово к использованию.</p>
-        <a href="https://yandex.ru" target="_blank" class="btn">Запустить Launcher</a>
+    <!-- ОКНО ЛАУНЧЕРА -->
+    <div class="glass-card hidden" id="launcher-screen">
+        <h1 style="font-size: 2rem;">Launcher</h1>
+        <p style="color: rgba(255,255,255,0.4); margin-bottom: 45px; line-height: 1.6;">Ваша персональная сборка Zlimb Ultra v1.0.6 готова к запуску в облаке.</p>
+        <a href="https://yandex.ru" target="_blank" class="btn-main">Download Package</a>
     </div>
 
-    <div id="side-menu">
-        <h2 id="menu-name" style="margin: 0; font-size: 1.4rem;">Username</h2>
-        <span id="menu-status" style="font-size:0.7rem; color: var(--accent); text-transform: uppercase; letter-spacing: 2px;">Стандартный доступ</span>
+    <!-- БОКОВАЯ ПАНЕЛЬ -->
+    <div id="side-panel">
+        <h2 id="menu-user" style="margin: 0; font-size: 1.8rem; font-weight: 800;">User</h2>
+        <p id="menu-role" style="font-size: 0.7rem; color: var(--accent); text-transform: uppercase; letter-spacing: 3px; margin-top: 5px;">Standard Account</p>
         
-        <div id="admin-panel" class="hidden admin-section">
-            <p style="color: #FF4B4B; font-size: 0.8rem; font-weight: 700; margin-bottom: 15px;">ПАНЕЛЬ УПРАВЛЕНИЯ</p>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <button class="btn" style="background:rgba(255,255,255,0.05); font-size:0.8rem;" onclick="setTheme('snow')">Снег</button>
-                <button class="btn" style="background:rgba(255,255,255,0.05); font-size:0.8rem;" onclick="setTheme('matrix')">Матрица</button>
+        <div id="admin-hub" class="hidden" style="margin-top: 50px; border-top: 1px solid var(--border); padding-top: 30px;">
+            <p style="color: #FF4B4B; font-weight: 800; font-size: 0.8rem; margin-bottom: 20px;">ADMIN COMMAND CENTER</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <button class="btn-main" style="padding: 12px; font-size: 0.8rem; background: var(--glass);" onclick="setTheme('snow')">Snow</button>
+                <button class="btn-main" style="padding: 12px; font-size: 0.8rem; background: var(--glass);" onclick="setTheme('matrix')">Matrix</button>
             </div>
 
-            <div id="owner-only" class="hidden" style="margin-top: 20px;">
-                <input type="text" id="target-username" placeholder="Ник пользователя" style="padding: 12px; font-size: 0.8rem;">
-                <button class="btn" style="background:#FF4B4B; padding: 12px; font-size: 0.8rem;" onclick="giveAdmin()">Выдать админку</button>
+            <!-- ВЫДАЧА АДМИНКИ -->
+            <div id="owner-only" class="hidden" style="margin-top: 35px;">
+                <p style="font-size: 0.7rem; color: #555; margin-bottom: 10px;">GRANT PERMISSIONS</p>
+                <input type="text" id="target-nick" placeholder="Target Username" style="font-size: 0.8rem; padding: 15px;">
+                <button class="btn-main" style="background: #FF4B4B;" onclick="grantAdmin()">Grant Access</button>
             </div>
         </div>
 
-        <button class="btn" style="background:rgba(255,0,0,0.1); color:#FF4B4B; margin-top:40px; border: 1px solid rgba(255,0,0,0.2);" onclick="logout()">Завершить сеанс</button>
+        <button class="btn-main" style="background: transparent; border: 1px solid #FF4B4B; color: #FF4B4B; margin-top: 60px;" onclick="logout()">Terminate Session</button>
+        <button class="btn-main" style="background: var(--glass); margin-top: 15px;" onclick="toggleSidebar()">Close Menu</button>
     </div>
 
     <script>
-        const OWNER_NAME = 'zl1mbyys';
-        const OWNER_PASS = 'Tema10052014!';
+        const OWNER = 'zl1mbyys';
+        const OWNER_P = 'Tema10052014!';
 
         let state = {
             user: localStorage.getItem('z_user'),
@@ -160,88 +168,90 @@
             theme: localStorage.getItem('z_theme') || 'snow'
         };
 
+        // Живой поиск при вводе ника
         document.getElementById('login-user').addEventListener('input', (e) => {
-            const val = e.target.value.trim();
+            const nick = e.target.value.trim();
             const whitelist = JSON.parse(localStorage.getItem('z_whitelist') || '[]');
-            const isOwner = val.toLowerCase() === OWNER_NAME;
-            const inWhitelist = whitelist.includes(val);
-            const hasPass = localStorage.getItem('z_pass_' + val);
+            const isOwner = nick.toLowerCase() === OWNER;
+            const inList = whitelist.includes(nick);
+            const hasPass = localStorage.getItem('z_pass_' + nick);
 
-            document.getElementById('pass-container').classList.toggle('hidden', !((isOwner) || (inWhitelist && hasPass)));
-            document.getElementById('setup-pass-container').classList.toggle('hidden', !(inWhitelist && !hasPass));
+            document.getElementById('pass-field').classList.toggle('hidden', !((isOwner) || (inList && hasPass)));
+            document.getElementById('setup-pass-field').classList.toggle('hidden', !(inList && !hasPass));
         });
 
         function handleAuth() {
-            const user = document.getElementById('login-user').value.trim();
-            const passInput = document.getElementById('login-pass').value;
-            const setupPass = document.getElementById('setup-new-pass').value;
+            const nick = document.getElementById('login-user').value.trim();
+            const passIn = document.getElementById('login-pass').value;
+            const setupP = document.getElementById('setup-new-pass').value;
             const whitelist = JSON.parse(localStorage.getItem('z_whitelist') || '[]');
 
-            if(user.toLowerCase() === OWNER_NAME) {
-                if(passInput === OWNER_PASS) saveLogin(user, true);
-                else alert("Неверный ключ владельца");
+            if(nick.toLowerCase() === OWNER) {
+                if(passIn === OWNER_P) save(nick, true);
+                else alert("System Key Error");
             } 
-            else if(whitelist.includes(user)) {
-                const savedPass = localStorage.getItem('z_pass_' + user);
-                if(!savedPass) {
-                    if(setupPass.length > 3) { localStorage.setItem('z_pass_' + user, setupPass); saveLogin(user, true); }
-                    else alert("Минимум 4 символа");
+            else if(whitelist.includes(nick)) {
+                const savedP = localStorage.getItem('z_pass_' + nick);
+                if(!savedP) {
+                    if(setupP.length > 3) { localStorage.setItem('z_pass_' + nick, setupP); save(nick, true); }
+                    else alert("Min 4 symbols");
                 } else {
-                    if(passInput === savedPass) saveLogin(user, true);
-                    else alert("Неверный ключ админа");
+                    if(passIn === savedP) save(nick, true);
+                    else alert("Wrong Admin Key");
                 }
-            } else if(user.length > 1) saveLogin(user, false);
+            } else if(nick.length > 1) save(nick, false);
         }
 
-        function saveLogin(user, admin) {
-            localStorage.setItem('z_user', user);
-            localStorage.setItem('z_admin', admin);
+        function save(u, a) {
+            localStorage.setItem('z_user', u);
+            localStorage.setItem('z_admin', a);
             location.reload();
         }
 
-        function giveAdmin() {
-            const nick = document.getElementById('target-username').value.trim();
-            if(!nick) return;
-            let whitelist = JSON.parse(localStorage.getItem('z_whitelist') || '[]');
-            if(!whitelist.includes(nick)) {
-                whitelist.push(nick);
-                localStorage.setItem('z_whitelist', JSON.stringify(whitelist));
-                alert("Доступ для " + nick + " открыт");
+        function grantAdmin() {
+            const n = document.getElementById('target-nick').value.trim();
+            if(!n) return;
+            let list = JSON.parse(localStorage.getItem('z_whitelist') || '[]');
+            if(!list.includes(n)) {
+                list.push(n);
+                localStorage.setItem('z_whitelist', JSON.stringify(list));
+                alert("Permission granted to " + n);
             }
         }
 
         function init() {
             if(!state.user) return;
-            document.getElementById('screen-auth').classList.add('hidden');
-            document.getElementById('screen-launcher').classList.remove('hidden');
-            document.getElementById('profile-trigger').classList.remove('hidden');
-            document.getElementById('nav-username').innerText = state.user;
-            document.getElementById('menu-name').innerText = state.user;
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('launcher-screen').classList.remove('hidden');
+            document.getElementById('profile-hub').classList.remove('hidden');
+            document.getElementById('nav-name').innerText = state.user;
+            document.getElementById('menu-user').innerText = state.user;
 
-            if(state.isAdmin || state.user.toLowerCase() === OWNER_NAME) {
-                document.getElementById('admin-panel').classList.remove('hidden');
-                document.getElementById('menu-status').innerText = "Administrator Access";
+            if(state.isAdmin || state.user.toLowerCase() === OWNER) {
+                document.getElementById('admin-hub').classList.remove('hidden');
+                document.getElementById('menu-role').innerText = "Administrator Status";
+                document.getElementById('menu-role').style.color = "#FF4B4B";
             }
-            if(state.user.toLowerCase() === OWNER_NAME) document.getElementById('owner-only').classList.remove('hidden');
+            if(state.user.toLowerCase() === OWNER) document.getElementById('owner-only').classList.remove('hidden');
         }
 
-        function toggleMenu() { document.getElementById('side-menu').classList.toggle('active'); }
+        function toggleSidebar() { document.getElementById('side-panel').classList.toggle('open'); }
         function setTheme(t) { localStorage.setItem('z_theme', t); location.reload(); }
         function logout() { localStorage.removeItem('z_user'); localStorage.removeItem('z_admin'); location.reload(); }
 
         function spawn() {
-            const cont = document.getElementById('particles-bg');
+            const c = document.getElementById('particles');
             const p = document.createElement('div');
             p.classList.add('snowflake');
             let size = Math.random() * 3 + 1;
             p.style.width = size + 'px'; p.style.height = size + 'px';
-            p.style.background = state.theme === 'matrix' ? "#00FF41" : "white";
+            p.style.background = state.theme === 'matrix' ? "#00FF41" : "rgba(255,255,255,0.5)";
             p.style.left = Math.random() * window.innerWidth + 'px';
             p.style.top = '-10px';
-            cont.appendChild(p);
-            p.animate([{ transform: 'translateY(0)' }, { transform: `translateY(${window.innerHeight + 20}px)` }], { duration: Math.random() * 4000 + 3000 }).onfinish = () => p.remove();
+            c.appendChild(p);
+            p.animate([{ transform: 'translateY(0)' }, { transform: `translateY(${window.innerHeight + 20}px)` }], { duration: Math.random() * 5000 + 4000 }).onfinish = () => p.remove();
         }
-        setInterval(spawn, 150);
+        setInterval(spawn, 200);
         init();
     </script>
 </body>
