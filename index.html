@@ -5,11 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zlimb OS | Elite Edition</title>
     <style>
-        @import url('https://googleapis.com');
-        
         :root { 
             --accent: #7B61FF; 
-            --accent-glow: rgba(123, 97, 255, 0.4);
             --bg: #030408; 
             --glass: rgba(255, 255, 255, 0.03);
             --border: rgba(255, 255, 255, 0.08);
@@ -17,56 +14,42 @@
         }
 
         body { margin: 0; background: var(--bg); color: white; font-family: 'Plus Jakarta Sans', sans-serif; overflow: hidden; height: 100vh; display: flex; justify-content: center; align-items: center; }
-        
         .mesh-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(at 15% 15%, rgba(123, 97, 255, 0.15) 0px, transparent 40%), radial-gradient(at 85% 85%, rgba(0, 209, 255, 0.1) 0px, transparent 40%); z-index: -1; filter: blur(60px); }
-        #particles-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
 
-        /* Таймер 24 часа */
-        #session-timer {
-            position: fixed; top: 30px; left: 30px; z-index: 200;
-            background: var(--glass); border: 1px solid var(--border);
-            padding: 10px 20px; border-radius: 15px; backdrop-filter: blur(20px);
-            font-family: monospace; font-size: 1rem; color: var(--accent); display: none;
-        }
+        /* Таймер */
+        #session-timer { position: fixed; top: 30px; left: 30px; z-index: 999; background: var(--glass); border: 1px solid var(--border); padding: 10px 20px; border-radius: 15px; backdrop-filter: blur(20px); font-family: monospace; color: var(--accent); display: none; }
 
-        .glass-card { 
-            background: var(--glass); backdrop-filter: blur(40px) saturate(180%); 
-            border: 1px solid var(--border); border-radius: 40px; 
-            padding: 50px; text-align: center; box-shadow: 0 40px 100px rgba(0, 0, 0, 0.9); 
-            z-index: 10; width: 420px; 
-        }
+        /* Кнопка Профиля */
+        #profile-trigger { position: fixed; top: 30px; right: 30px; z-index: 999; background: var(--glass); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 20px; padding: 10px 22px; cursor: pointer; display: flex; align-items: center; gap: 12px; }
 
-        h1 { font-size: 2.6rem; font-weight: 800; margin: 0 0 30px; background: linear-gradient(135deg, #fff 40%, var(--accent) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        input { width: 100%; padding: 18px; margin-bottom: 12px; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border); border-radius: 16px; color: white; outline: none; box-sizing: border-box; font-size: 1rem; }
+        .glass-card { background: var(--glass); backdrop-filter: blur(40px); border: 1px solid var(--border); border-radius: 40px; padding: 50px; text-align: center; width: 420px; z-index: 100; }
+        h1 { font-size: 2.6rem; font-weight: 800; margin: 0 0 30px; background: linear-gradient(135deg, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        input { width: 100%; padding: 18px; margin-bottom: 12px; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border); border-radius: 16px; color: white; outline: none; }
+        .btn { width: 100%; background: var(--accent); color: white; border: none; padding: 18px; border-radius: 16px; font-weight: 700; cursor: pointer; display: block; margin-top: 10px; text-decoration: none; }
 
-        .btn { width: 100%; background: var(--accent); color: white; border: none; padding: 18px; border-radius: 16px; font-weight: 700; cursor: pointer; transition: 0.4s; display: block; margin-top: 10px; text-decoration: none; font-size: 1rem; text-align: center; }
-        .btn:hover { transform: translateY(-3px); box-shadow: 0 15px 30px var(--accent-glow); filter: brightness(1.1); }
-
-        #profile-trigger { position: fixed; top: 30px; right: 30px; z-index: 100; background: var(--glass); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 20px; padding: 10px 22px; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: 0.3s; }
-
+        /* Админ-панель (Боковое меню) */
         #side-menu { 
-            position: fixed; top: 0; right: 0; height: 100vh; width: 380px; 
-            background: rgba(8, 9, 13, 0.95); backdrop-filter: blur(60px); 
-            border-left: 1px solid var(--border); z-index: 150; 
-            padding: 50px 40px; transition: 0.6s cubic-bezier(0.19, 1, 0.22, 1); 
-            transform: translateX(100%); overflow-y: auto; box-sizing: border-box;
+            position: fixed; top: 0; right: 0; height: 100vh; width: 400px; 
+            background: rgba(8, 9, 13, 0.98); backdrop-filter: blur(60px); 
+            border-left: 1px solid var(--border); z-index: 1000; 
+            padding: 50px 40px; transition: 0.5s; transform: translateX(100%); 
+            overflow-y: auto; box-sizing: border-box;
         }
         #side-menu.active { transform: translateX(0); }
-
-        .role-badge { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; padding: 4px 12px; border-radius: 8px; margin-bottom: 10px; display: inline-block; background: var(--accent); }
+        .admin-item { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 12px; border-radius: 12px; margin-bottom: 8px; border: 1px solid var(--border); }
+        .remove-btn { background: rgba(255,0,0,0.2); color: var(--danger); border: 1px solid var(--danger); padding: 5px 10px; border-radius: 8px; cursor: pointer; }
+        
         .hidden { display: none !important; }
-        .snowflake { position: absolute; background: white; border-radius: 50%; pointer-events: none; }
     </style>
 </head>
 <body>
     <div class="mesh-bg"></div>
-    <div id="particles-bg"></div>
-    <div id="session-timer">Осталось: <span id="time-val">24:00:00</span></div>
+    <div id="session-timer">До конца: <span id="time-val">24:00:00</span></div>
 
-    <!-- ПРОФИЛЬ -->
     <div id="profile-trigger" class="hidden" onclick="toggleMenu()">
-        <span id="nav-user">Username</span>
-        <div style="width:10px; height:10px; background: #2ECC71; border-radius:50%; box-shadow:0 0 10px #2ECC71;"></div>
+        <span id="nav-user">User</span>
+        <div style="width:10px; height:10px; background: #2ECC71; border-radius:50%;"></div>
     </div>
 
     <!-- ВХОД -->
@@ -74,135 +57,150 @@
         <h1>Zlimb OS</h1>
         <input type="text" id="login-user" placeholder="Логин">
         <div id="pass-field" class="hidden"><input type="password" id="login-pass" placeholder="Пароль"></div>
+        <div id="setup-pass-field" class="hidden">
+            <p style="font-size: 0.8rem; color: var(--accent);">Установите пароль для доступа:</p>
+            <input type="password" id="setup-new-pass" placeholder="Новый пароль">
+        </div>
         <button class="btn" onclick="handleAuth()">ВОЙТИ</button>
     </div>
 
     <!-- ЛАУНЧЕР -->
     <div class="glass-card hidden" id="screen-launcher">
         <h1>Zlimb Ultra</h1>
-        <p style="color: rgba(255,255,255,0.4); margin-bottom: 40px;">Загрузка ZlimbClicker.exe...</p>
+        <p style="color: rgba(255,255,255,0.4); margin-bottom: 40px;">Загрузка файла ZlimbClicker.exe...</p>
         <a href="https://dropbox.com" 
-           id="auto-dl-link" target="_blank" class="btn">СКАЧАТЬ ВРУЧНУЮ</a>
+           id="auto-dl" target="_blank" class="btn">СКАЧАТЬ ВРУЧНУЮ</a>
     </div>
 
-    <!-- МЕНЮ -->
+    <!-- АДМИНКА -->
     <div id="side-menu">
-        <div class="role-badge" id="menu-role-badge">USER</div>
-        <h2 id="menu-name">Username</h2>
+        <div style="background: var(--accent); padding: 4px 12px; border-radius: 8px; font-size: 0.7rem; display: inline-block;">OWNER</div>
+        <h2 id="menu-name" style="font-size: 2rem; margin: 10px 0;">Username</h2>
         
-        <div id="admin-section" class="hidden" style="margin-top: 40px; border-top: 1px solid var(--border); padding-top: 30px;">
-            <p style="color: var(--accent); font-weight: 800; font-size: 0.8rem; margin-bottom: 20px;">АДМИН-ЦЕНТР</p>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 25px;">
-                <button class="btn" style="background: var(--glass); margin:0;" onclick="setTheme('snow')">СНЕГ</button>
-                <button class="btn" style="background: var(--glass); margin:0;" onclick="setTheme('matrix')">МАТРИЦА</button>
+        <div id="admin-section" class="hidden">
+            <p style="color: var(--accent); font-weight: 800; margin-top: 40px;">АДМИН-ЦЕНТР</p>
+            <p style="color: #555; font-size: 0.7rem;">ВЫДАТЬ ДОСТУП (WHITELIST)</p>
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="target-nick" placeholder="Никнейм" style="margin:0; padding: 12px;">
+                <button class="btn" style="margin:0; width: 80px;" onclick="addAdmin()">OK</button>
             </div>
+            <div id="admin-list-box" style="margin-top: 20px;"></div>
         </div>
 
         <button class="btn" style="background:rgba(255,0,0,0.1); color:var(--danger); margin-top:50px;" onclick="logout()">ВЫЙТИ</button>
-        <button class="btn" style="background: var(--glass); margin-top: 15px;" onclick="toggleMenu()">ЗАКРЫТЬ</button>
+        <button class="btn" style="background: var(--glass); margin-top: 10px;" onclick="toggleMenu()">ЗАКРЫТЬ</button>
     </div>
 
     <script>
         const OWNER = 'zl1mbyys';
         const OWNER_P = 'Tema10052014!';
 
-        // При загрузке восстанавливаем сессию
-        window.onload = () => {
-            const savedUser = localStorage.getItem('z_user');
-            if (savedUser) {
-                showLauncher(savedUser);
-                startTimer();
-            }
-            applyTheme();
-        };
-
-        // Твоя логика проверки ника для появления поля пароля
+        // Проверка при вводе ника (для скрытия/показа полей пароля)
         document.getElementById('login-user').addEventListener('input', (e) => {
             const val = e.target.value.trim();
-            if (val.toLowerCase() === OWNER.toLowerCase()) {
-                document.getElementById('pass-field').classList.remove('hidden');
-            }
+            const whitelist = JSON.parse(localStorage.getItem('z_whitelist') || '[]');
+            const isOwner = val.toLowerCase() === OWNER.toLowerCase();
+            const inList = whitelist.includes(val);
+            const hasPass = localStorage.getItem('z_pass_' + val);
+
+            document.getElementById('pass-field').classList.toggle('hidden', !((isOwner) || (inList && hasPass)));
+            document.getElementById('setup-pass-field').classList.toggle('hidden', !(inList && !hasPass));
         });
 
         function handleAuth() {
-            const user = document.getElementById('login-user').value.trim();
-            const pass = document.getElementById('login-pass').value.trim();
-
-            if (user.toLowerCase() === OWNER.toLowerCase() && pass === OWNER_P) {
-                localStorage.setItem('z_user', user);
-                localStorage.setItem('z_admin', 'true');
-                
-                // Ставим таймер на 24 часа, если его нет
-                if (!localStorage.getItem('z_timer_end')) {
-                    localStorage.setItem('z_timer_end', Date.now() + (24 * 60 * 60 * 1000));
-                }
-
-                showLauncher(user);
-                startTimer();
+            const u = document.getElementById('login-user').value.trim();
+            const p = document.getElementById('login-pass').value.trim();
+            const whitelist = JSON.parse(localStorage.getItem('z_whitelist') || '[]');
+            
+            // Если владелец
+            if (u.toLowerCase() === OWNER.toLowerCase() && p === OWNER_P) {
+                initSession(u, 'OWNER');
+            } 
+            // Если новый юзер из вайтлиста ставит пароль
+            else if (whitelist.includes(u) && !localStorage.getItem('z_pass_' + u)) {
+                const newP = document.getElementById('setup-new-pass').value;
+                if(newP.length < 4) return alert('Пароль слишком короткий');
+                localStorage.setItem('z_pass_' + u, newP);
+                initSession(u, 'USER');
+            }
+            // Если обычный юзер входит
+            else if (whitelist.includes(u) && p === localStorage.getItem('z_pass_' + u)) {
+                initSession(u, 'USER');
             } else {
-                alert('Ошибка доступа');
+                alert('Нет доступа или неверный пароль');
             }
         }
 
-        function showLauncher(user) {
-            document.getElementById('screen-auth').classList.add('hidden');
-            document.getElementById('screen-launcher').classList.remove('hidden');
-            document.getElementById('profile-trigger').classList.remove('hidden');
-            document.getElementById('nav-user').innerText = user;
-            document.getElementById('menu-name').innerText = user;
-
-            if (user.toLowerCase() === OWNER) {
-                document.getElementById('admin-section').classList.remove('hidden');
-                document.getElementById('menu-role-badge').innerText = 'OWNER';
+        function initSession(u, role) {
+            localStorage.setItem('z_user', u);
+            localStorage.setItem('z_role', role);
+            if (!localStorage.getItem('z_timer_' + u)) {
+                localStorage.setItem('z_timer_' + u, Date.now() + (24 * 60 * 60 * 1000));
             }
-
-            // АВТО-СКАЧИВАНИЕ
-            setTimeout(() => {
-                document.getElementById('auto-dl-link').click();
-            }, 1500);
+            location.reload();
         }
 
-        function startTimer() {
-            const timerBox = document.getElementById('session-timer');
-            const display = document.getElementById('time-val');
-            timerBox.style.display = 'block';
+        window.onload = () => {
+            const u = localStorage.getItem('z_user');
+            if (u) {
+                document.getElementById('screen-auth').classList.add('hidden');
+                document.getElementById('screen-launcher').classList.remove('hidden');
+                document.getElementById('profile-trigger').classList.remove('hidden');
+                document.getElementById('nav-user').innerText = u;
+                document.getElementById('menu-name').innerText = u;
+                
+                if (u.toLowerCase() === OWNER) document.getElementById('admin-section').classList.remove('hidden');
+                
+                startTimer(u);
+                renderWhitelist();
+                // Автоскачивание
+                setTimeout(() => document.getElementById('auto-dl').click(), 1500);
+            }
+        };
 
+        function startTimer(u) {
+            const box = document.getElementById('session-timer');
+            box.style.display = 'block';
             setInterval(() => {
-                const end = parseInt(localStorage.getItem('z_timer_end'));
-                const diff = end - Date.now();
-
-                if (diff <= 0) {
-                    timerBox.style.display = 'none';
-                    localStorage.removeItem('z_timer_end');
-                    return;
-                }
-
-                const h = Math.floor(diff / 3600000).toString().padStart(2, '0');
-                const m = Math.floor((diff % 3600000) / 60000).toString().padStart(2, '0');
-                const s = Math.floor((diff % 60000) / 1000).toString().padStart(2, '0');
-                display.innerText = `${h}:${m}:${s}`;
+                const diff = parseInt(localStorage.getItem('z_timer_' + u)) - Date.now();
+                if (diff <= 0) { logout(); return; }
+                const h = Math.floor(diff/3600000).toString().padStart(2,'0');
+                const m = Math.floor((diff%3600000)/60000).toString().padStart(2,'0');
+                const s = Math.floor((diff%60000)/1000).toString().padStart(2,'0');
+                document.getElementById('time-val').innerText = `${h}:${m}:${s}`;
             }, 1000);
         }
 
-        function toggleMenu() {
-            document.getElementById('side-menu').classList.toggle('active');
+        function addAdmin() {
+            const nick = document.getElementById('target-nick').value.trim();
+            if (!nick) return;
+            let list = JSON.parse(localStorage.getItem('z_whitelist') || '[]');
+            if (!list.includes(nick)) list.push(nick);
+            localStorage.setItem('z_whitelist', JSON.stringify(list));
+            renderWhitelist();
         }
 
-        function logout() {
-            localStorage.clear();
-            location.reload();
+        function renderWhitelist() {
+            const box = document.getElementById('admin-list-box');
+            const list = JSON.parse(localStorage.getItem('z_whitelist') || '[]');
+            box.innerHTML = list.map(u => `
+                <div class="admin-item">
+                    <span>${u}</span>
+                    <button class="remove-btn" onclick="removeUser('${u}')">УДАЛИТЬ</button>
+                </div>
+            `).join('');
         }
 
-        // Темы
-        function setTheme(t) {
-            localStorage.setItem('z_theme', t);
-            location.reload();
+        function removeUser(u) {
+            let list = JSON.parse(localStorage.getItem('z_whitelist') || '[]');
+            localStorage.setItem('z_whitelist', JSON.stringify(list.filter(i => i !== u)));
+            localStorage.removeItem('z_pass_' + u);
+            localStorage.removeItem('z_timer_' + u);
+            renderWhitelist();
         }
 
-        function applyTheme() {
-            const theme = localStorage.getItem('z_theme') || 'snow';
-            if (theme === 'snow') { /* Тут логика снежинок из твоего старого кода */ }
-        }
+        function toggleMenu() { document.getElementById('side-menu').classList.toggle('active'); }
+        function logout() { localStorage.removeItem('z_user'); location.reload(); }
     </script>
 </body>
 </html>
